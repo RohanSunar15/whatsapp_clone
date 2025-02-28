@@ -18,9 +18,8 @@ class _LanguageScreenState extends State<LanguageScreen> {
     List<MapEntry<String, String>> languageList = languageMap.entries.toList();
 
     return DraggableScrollableSheet(
-      initialChildSize: 0.5,
+      initialChildSize: 0.55,
       minChildSize: 0.5,
-      maxChildSize: 0.9,
       builder: (context, scrollController){
         return Material(
         color: white,
@@ -56,12 +55,13 @@ class _LanguageScreenState extends State<LanguageScreen> {
                 String value = languageList[index].value;
 
                 return RadioListTile<String>(
-                  title: Text(key),
-                  subtitle: Text(value),
+                  title: Text(value ,style: TextStyle(fontSize: 14),),
+                  subtitle: Text(key ,style: TextStyle(fontSize: 12),),
                   value: key,
                   groupValue: selectedLanguage,
                   onChanged: (value) {},
-                  activeColor: Colors.green, // Highlight selected option
+                  activeColor: Colors.green,
+                  dense: true,
                 );
               },
             ),
