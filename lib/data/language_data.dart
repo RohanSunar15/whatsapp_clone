@@ -1,5 +1,5 @@
 const Map<String, String> languageMap = {
-  "English": "English",
+  "English": "(device's language)",
   "Hindi": "हिन्दी",
   "Marathi": "मराठी",
   "Gujarati": "ગુજરાતી",

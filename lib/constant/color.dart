@@ -13,3 +13,4 @@ Color white = Color(0xFFFFFFFF);
 Color black = Color(0xFF000000);
 Color blue = Color(0xFF236CCD);
 Color grey = Color(0xFF585E65);
+Color lightGrey  = Color(0xFFF5F5F5);
