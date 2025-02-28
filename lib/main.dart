@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
       theme: lightTheme,
       darkTheme: darkTheme,
 
-      home: AppLanguageWidget(),
+      home: SplashScreen(),
     );
   }
 }
