@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:whatsapp_clone/data/language_data.dart';
-import '../../../constant/color.dart';
+import '../../constant/color.dart';
 
 class LanguageScreen extends StatefulWidget {
   const LanguageScreen({super.key});

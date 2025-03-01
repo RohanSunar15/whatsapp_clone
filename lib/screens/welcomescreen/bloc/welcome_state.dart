@@ -7,6 +7,10 @@ final class WelcomeInitial extends WelcomeState {}
 
 abstract class WelcomeActionState extends WelcomeState{}
 
+class ShowDropdownState extends WelcomeState{}
+
 class SelectedLanguageState extends WelcomeActionState{}
 
-class WelcomeScreenToChatScreen extends WelcomeState{}
+class WelcomeToLanguageScreenState extends WelcomeState{}
+
+class WelcomeToAuthenticationScreenState extends WelcomeState{}

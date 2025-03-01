@@ -11,13 +11,14 @@ part 'splash_screen_state.dart';
 
 class SplashScreenBloc extends Bloc<SplashScreenEvent, SplashScreenState> {
   SplashScreenBloc() : super(SplashScreenInitialState()) {
-    on<NavigateToChatScreen>(navigateToChatScreen);
+    on<NavigateToChatScreenEvent>(navigateToChatScreen);
   }
 
-  FutureOr<void> navigateToChatScreen(NavigateToChatScreen event, Emitter<SplashScreenState> emit) async{
+  FutureOr<void> navigateToChatScreen(NavigateToChatScreenEvent event, Emitter<SplashScreenState> emit) async{
     print('going to Welcome Screen');
 
     await Future.delayed(Duration(seconds: 1));
+
     emit(SplashScreenToWelcomeScreenState());
   }
 }
