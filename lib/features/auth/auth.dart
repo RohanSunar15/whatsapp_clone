@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:whatsapp_clone/core/theme/app_color.dart';
 import 'package:whatsapp_clone/core/widget/custom_button.dart';
 import 'package:whatsapp_clone/features/auth/countryCodePage/country_code_page.dart';
@@ -40,7 +41,7 @@ class _AuthPageState extends State<AuthPage> {
                 style: TextStyle(
                   color: AppColor.black,
                   fontSize: 25,
-                  fontWeight: FontWeight.bold,
+                  fontWeight: FontWeight.w400,
                   decoration: TextDecoration.none,
                 ),
               ),
@@ -109,13 +110,12 @@ class _AuthPageState extends State<AuthPage> {
                   SizedBox(
                     width: 100,
                     child: TextField(
+                      style: TextStyle(
+                        fontSize: 19,
+                        color: Colors.black,
+                      ),
                       textAlign: TextAlign.left,
                       decoration: InputDecoration(
-                        hintText: '91',
-                        hintStyle: TextStyle(
-                          fontSize: 19,
-                          color: Colors.black,
-                        ),
                         prefixIcon: Icon(Icons.add),
                         enabledBorder: UnderlineInputBorder(
                           borderSide: BorderSide(color: AppColor
@@ -129,26 +129,31 @@ class _AuthPageState extends State<AuthPage> {
                     ),
                   ),
 
-                  Expanded( // <-- Expanded goes here
+                  Expanded(
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: AbsorbPointer( // optional if it's just for display
-                        child: TextFormField(
-                          textAlign: TextAlign.left,
-                          decoration: InputDecoration(
-                            hintText: 'Phone number',
-                            hintStyle: TextStyle(
-                                fontSize: 19,
-                                color: AppColor.grey
-                            ),
-                            enabledBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(
-                                  color: AppColor.lightGreen), // Normal state
-                            ),
-                            focusedBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(color: Colors.lightGreen,
-                                  width: 5), // On focus
-                            ),
+                      child: TextFormField(
+                        style: TextStyle(
+                          fontSize: 19
+                        ),
+                        keyboardType: TextInputType.number,
+                        inputFormatters: <TextInputFormatter>[
+                          FilteringTextInputFormatter.digitsOnly,
+                        ],
+                        textAlign: TextAlign.left,
+                        decoration: InputDecoration(
+                          hintText: 'Phone number',
+                          hintStyle: TextStyle(
+                              fontSize: 19,
+                              color: AppColor.grey
+                          ),
+                          enabledBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(
+                                color: AppColor.lightGreen), // Normal state
+                          ),
+                          focusedBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.lightGreen,
+                                width: 5), // On focus
                           ),
                         ),
                       ),
@@ -157,8 +162,23 @@ class _AuthPageState extends State<AuthPage> {
 
                 ],
               ),
+              Spacer(),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 20),
+                child: CustomOutlinedButton(
+                  borderRadius: 30,
+                  height: 50,
+                  width: 350,
+                  backgroundColor: AppColor.lightGreen,
+                    childWidget: Text('Next' ,
+                      style:  TextStyle(
+                        color: AppColor.white,
+                        fontSize: 18,
+                    ),
+                    ),
+                ),
+              ),
 
-              CustomOutlinedButton(childWidget: Text('Next')),
 
             ],
           ),
