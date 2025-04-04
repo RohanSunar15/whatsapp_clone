@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:whatsapp_clone/constant/theme.dart';
-import 'package:whatsapp_clone/screens/authenticationscreen/authentication.dart';
-import 'package:whatsapp_clone/screens/splashscreen/splash_screen.dart';
-import 'package:whatsapp_clone/screens/welcomescreen/welcome_screen.dart';
+import 'package:whatsapp_clone/core/theme/app_theme.dart';
+import 'package:whatsapp_clone/features/auth/auth.dart';
+import 'package:whatsapp_clone/features/auth/countryCodePage/country_code_page.dart';
+import 'package:whatsapp_clone/features/splashscreen/splash_screen.dart';
+import 'package:whatsapp_clone/features/welcomescreen/welcome_screen.dart';
 
 
 void main() {
@@ -20,7 +21,7 @@ class MyApp extends StatelessWidget {
       theme: lightTheme,
       darkTheme: darkTheme,
 
-      home: WelcomeScreen(),
+      home: SplashScreen(),
     );
   }
 }

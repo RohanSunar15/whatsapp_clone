@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:whatsapp_clone/screens/authenticationscreen/authentication.dart';
-import 'package:whatsapp_clone/screens/welcomescreen/bloc/welcome_bloc.dart';
-import 'package:whatsapp_clone/widget/custom_popup_menu.dart';
+import 'package:whatsapp_clone/core/widget/custom_popup_menu.dart';
+import 'package:whatsapp_clone/features/auth/auth.dart';
+import 'package:whatsapp_clone/features/welcomescreen/bloc/welcome_bloc.dart';
 
-import '../../constant/color.dart';
-import 'language_screen.dart';
+import '../../core/theme/app_color.dart';
+import 'language_screen/language_screen.dart';
 
 class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({super.key});
@@ -27,7 +27,9 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(appBar: AppBar(
+    return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
       actions: [
         Padding(
           padding: const EdgeInsets.all(8.0),
@@ -44,7 +46,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
            _showLanguageBottomSheet(context);
           } else if (state is  WelcomeToAuthenticationScreenState) {
             Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => Authentication()));
+                MaterialPageRoute(builder: (context) => AuthPage()));
           }
         },
         child: Padding(
@@ -61,15 +63,15 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 child: RichText(
                   text: TextSpan(
                     text: 'Read our ',
-                    style: TextStyle(color: grey, fontSize: 13),
+                    style: TextStyle(color: AppColor.grey, fontSize: 13),
                     children: [
                       TextSpan(
                         text: 'Privacy Policy. ',
-                        style: TextStyle(color: blue),
+                        style: TextStyle(color: AppColor.blue),
                       ),
                       TextSpan(
                         text: 'Tap "Agree and continue" to accept the ',
-                        style: TextStyle(color: grey),
+                        style: TextStyle(color: AppColor.grey),
                       ),
                     ],
                   ),
@@ -79,7 +81,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 child: RichText(
                   text: TextSpan(
                     text: 'Terms of Service.',
-                    style: TextStyle(color: blue, fontSize: 13),
+                    style: TextStyle(color: AppColor.blue, fontSize: 13),
                   ),
                 ),
               ),
@@ -88,8 +90,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 padding: const EdgeInsets.symmetric(horizontal: 100.0),
                 child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                        backgroundColor: lightGrey,
-                        overlayColor: grey
+                        backgroundColor: AppColor.lightGrey,
+                        overlayColor: AppColor.grey
                     ),
                     onPressed: () {
                       welcomeBloc.add(LanguageButtonClickedEvent());
@@ -97,13 +99,13 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.language, color: lightGreen, size: 25,),
+                        Icon(Icons.language, color: AppColor.lightGreen, size: 25,),
                         SizedBox(width: 10,),
                         Text('English', style: TextStyle(
-                          color: lightGreen,
+                          color: AppColor.lightGreen,
                         ),),
                         SizedBox(width: 10,),
-                        Icon(Icons.keyboard_arrow_down, color: lightGreen,
+                        Icon(Icons.keyboard_arrow_down, color: AppColor.lightGreen,
                           size: 25,),
 
                       ],
@@ -112,7 +114,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               SizedBox(height: 10),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: lightGreen,
+                  backgroundColor: AppColor.lightGreen,
 
                 ),
                 onPressed: () {
@@ -122,7 +124,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   width: double.maxFinite,
                   child: Center(
                     child: Text('Agree and continue', style: TextStyle(
-                        color: white,
+                        color: AppColor.white,
                         fontSize: 13
                     ),),
                   ),

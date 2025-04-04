@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:whatsapp_clone/data/language_data.dart';
-import '../../constant/color.dart';
+import 'package:whatsapp_clone/features/welcomescreen/local_repository/language_data.dart';
+import '../../../core/theme/app_color.dart';
 
 class LanguageScreen extends StatefulWidget {
   const LanguageScreen({super.key});
@@ -22,11 +22,11 @@ class _LanguageScreenState extends State<LanguageScreen> {
       minChildSize: 0.5,
       builder: (context, scrollController){
         return Material(
-        color: white,
+        color: AppColor.white,
         child: SafeArea(
           child: Column(
             children: [
-              Icon(Icons.horizontal_rule_rounded, size: 35, color: grey),
+              Icon(Icons.horizontal_rule_rounded, size: 35, color: AppColor.grey),
               Row(
                 children: [
                   SizedBox(width: 10),
@@ -35,7 +35,7 @@ class _LanguageScreenState extends State<LanguageScreen> {
                   Text(
                     'App Language',
                     style: TextStyle(
-                      color: black,
+                      color: AppColor.black,
                       fontSize: 18,
                       fontWeight: FontWeight.normal,
                       decoration: TextDecoration.none,
@@ -44,7 +44,7 @@ class _LanguageScreenState extends State<LanguageScreen> {
                 ],
               ),
               SizedBox(height: 15,),
-              Divider(height: 3, color: lightGrey,),
+              Divider(height: 3, color: AppColor.lightGrey,),
           Expanded(
             child: ListView.builder(
               controller: scrollController,
@@ -59,7 +59,11 @@ class _LanguageScreenState extends State<LanguageScreen> {
                   subtitle: Text(key ,style: TextStyle(fontSize: 12),),
                   value: key,
                   groupValue: selectedLanguage,
-                  onChanged: (value) {},
+                  onChanged: (value) {
+                    setState(() {
+
+                    });
+                  },
                   activeColor: Colors.green,
                   dense: true,
                 );

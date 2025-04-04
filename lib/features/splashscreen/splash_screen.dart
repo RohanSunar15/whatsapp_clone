@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:whatsapp_clone/screens/splashscreen/bloc/splash_screen_bloc.dart';
-import 'package:whatsapp_clone/screens/welcomescreen/welcome_screen.dart';
+import 'package:whatsapp_clone/features/splashscreen/bloc/splash_screen_bloc.dart';
+import 'package:whatsapp_clone/features/welcomescreen/welcome_screen.dart';
 
-import '../../constant/color.dart';
+import '../../core/theme/app_color.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -41,7 +41,7 @@ class _SplashScreenState extends State<SplashScreen> {
               SizedBox(height: 180),
               Image.asset(
                 'assets/images/whatsapp_light_green_logo.png',
-                color: lightGreen,
+                color: AppColor.lightGreen,
                 scale: 25,
               ),
               SizedBox(height: 100),
@@ -51,7 +51,7 @@ class _SplashScreenState extends State<SplashScreen> {
                   Image.asset(
                     'assets/images/meta_logo_text.png',
                     scale: 7,
-                    color: lightGreen,
+                    color: AppColor.lightGreen,
                   ),
                 ],
               ),

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:whatsapp_clone/core/theme/app_color.dart';
 
-import '../../constant/color.dart';
 
 class CustomOutlinedButton extends StatelessWidget {
   const CustomOutlinedButton({
@@ -45,11 +45,11 @@ class CustomOutlinedButton extends StatelessWidget {
       child: OutlinedButton(
           onPressed: onPressed ?? () {},
           style: OutlinedButton.styleFrom(
-              overlayColor: overlayColor ?? white,
+              overlayColor: overlayColor ?? AppColor.white,
               backgroundColor: backgroundColor,
               padding:padding,
               side: BorderSide(
-                color:borderSideColor ?? Colors.white,
+                color:borderSideColor ?? AppColor.white,
               ),
               shape: RoundedRectangleBorder(
                   borderRadius:BorderRadius.circular(
