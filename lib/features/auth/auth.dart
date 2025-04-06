@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:whatsapp_clone/core/theme/app_color.dart';
 import 'package:whatsapp_clone/core/widget/custom_button.dart';
+import 'package:whatsapp_clone/core/widget/custom_show_dialog.dart';
 import 'package:whatsapp_clone/features/auth/countryCodePage/country_code_page.dart';
 import 'package:whatsapp_clone/features/auth/countryCodePage/local_repository/country_code_data.dart';
 
@@ -12,11 +13,18 @@ class AuthPage extends StatefulWidget {
   State<AuthPage> createState() => _AuthPageState();
 }
 
+void _confirmNumberDialogBox (BuildContext context){
+  showDialog(
+      context: context,
+      builder: (_) => const CustomShowDialog( style: TextStyle(),)
+  );
+}
+
 class _AuthPageState extends State<AuthPage> {
+
   @override
   Widget build(BuildContext context) {
     String? selectedCountry;
-    final countryEntries = CountryCodeList.countries.entries.toList();
 
     return Scaffold(
       appBar: AppBar(
@@ -176,6 +184,9 @@ class _AuthPageState extends State<AuthPage> {
                         fontSize: 18,
                     ),
                     ),
+                  onPressed: (){
+                    _confirmNumberDialogBox(context);
+                  }
                 ),
               ),
 
@@ -186,4 +197,5 @@ class _AuthPageState extends State<AuthPage> {
       ),
     );
   }
+
 }
