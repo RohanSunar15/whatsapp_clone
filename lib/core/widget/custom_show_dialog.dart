@@ -1,34 +1,34 @@
 import 'package:flutter/material.dart';
+import 'package:whatsapp_clone/core/theme/app_color.dart';
 import 'package:whatsapp_clone/core/widget/custom_button.dart';
 
 class CustomShowDialog extends StatelessWidget {
-  final String title;
-  final TextStyle style;
+  final Widget? title;
   final double dialogHeight;
   final double dialogWidth;
+  final Widget widget;
+  final ShapeBorder? shape;
 
   const CustomShowDialog({
     super.key,
-     this.title = "",
-    required this.style,
-     this.dialogHeight = 90,
+     this.title,
+     this.dialogHeight = 50,
      this.dialogWidth = 300,
+    required this.widget,
+    this.shape,
   });
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text(title, style: style),
+      title:title,
       content: SizedBox(
         height: dialogHeight,
         width: dialogWidth,
-        child: Column(
-          children: [
-            Text("+91 98341 50718 "),
-            Row(children: [CustomOutlinedButton(childWidget: Text('Edit'))]),
-          ],
-        ),
+        child: widget,
+
       ),
+      shape: shape
     );
   }
 }

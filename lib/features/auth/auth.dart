@@ -3,24 +3,84 @@ import 'package:flutter/services.dart';
 import 'package:whatsapp_clone/core/theme/app_color.dart';
 import 'package:whatsapp_clone/core/widget/custom_button.dart';
 import 'package:whatsapp_clone/core/widget/custom_show_dialog.dart';
+import 'package:whatsapp_clone/core/widget/custom_text_button.dart';
 import 'package:whatsapp_clone/features/auth/countryCodePage/country_code_page.dart';
-import 'package:whatsapp_clone/features/auth/countryCodePage/local_repository/country_code_data.dart';
 
 class AuthPage extends StatefulWidget {
   const AuthPage({super.key});
 
   @override
   State<AuthPage> createState() => _AuthPageState();
+
 }
+
+TextEditingController countryCode = TextEditingController();
+TextEditingController phoneNumberController = TextEditingController();
+
+
 
 void _confirmNumberDialogBox (BuildContext context){
   showDialog(
       context: context,
-      builder: (_) => const CustomShowDialog( style: TextStyle(),)
+      builder: (_) =>
+          CustomShowDialog(
+            title: Text('Is this the correct number?', style: TextStyle(
+              fontSize: 17,
+            ),),
+            widget: Column(
+              children: [
+                Text('${countryCode.text}  ${phoneNumberController.text}'),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    CustomTextButton(
+                      text: 'Edit',
+                      textColor: AppColor.green,
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+
+                    SizedBox(width: 15,),
+                    CustomTextButton(
+                      text: 'Yes',
+                      textColor: AppColor.green,
+                      onPressed: () {},
+                    ),
+                  ],
+                )
+              ],
+            ),
+          )
   );
 }
 
+void _connectingDialogBox (BuildContext context){
+  showDialog(
+      context: context,
+      builder: (_) =>
+          CustomShowDialog(
+            widget:  Row(
+              children: [
+                SizedBox(width: 25,),
+                CircularProgressIndicator(
+                  color: AppColor.lightGreen,
+                ),
+                SizedBox(width: 25,),
+                Text('Connecting...', style: TextStyle(
+                  fontSize: 17,
+                ),)
+              ],),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.zero,
+            ),
+          )
+  );
+}
+
+
 class _AuthPageState extends State<AuthPage> {
+
 
   @override
   Widget build(BuildContext context) {
@@ -141,6 +201,7 @@ class _AuthPageState extends State<AuthPage> {
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: TextFormField(
+                        controller: phoneNumberController,
                         style: TextStyle(
                           fontSize: 19
                         ),
@@ -185,7 +246,7 @@ class _AuthPageState extends State<AuthPage> {
                     ),
                     ),
                   onPressed: (){
-                    _confirmNumberDialogBox(context);
+                    _connectingDialogBox(context);
                   }
                 ),
               ),
