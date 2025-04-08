@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:whatsapp_clone/features/splashscreen/bloc/splash_screen_bloc.dart';
-import 'package:whatsapp_clone/features/welcomescreen/welcome_screen.dart';
+import 'package:whatsapp_clone/features/onboarding/view/onboarding.dart';
+import 'package:whatsapp_clone/features/splash/bloc/splash_bloc.dart';
 
-import '../../core/theme/app_color.dart';
+import '../../../core/theme/app_color.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -31,7 +31,7 @@ class _SplashScreenState extends State<SplashScreen> {
           if (state is SplashScreenToWelcomeScreenState) {
             Navigator.of(
               context,
-            ).push(MaterialPageRoute(builder: (context) => WelcomeScreen()));
+            ).push(MaterialPageRoute(builder: (context) => Onboarding()));
           }
         },
         child: Center(

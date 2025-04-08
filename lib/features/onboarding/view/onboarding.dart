@@ -1,27 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:whatsapp_clone/core/widget/custom_popup_menu.dart';
-import 'package:whatsapp_clone/features/auth/auth.dart';
-import 'package:whatsapp_clone/features/welcomescreen/bloc/welcome_bloc.dart';
+import 'package:whatsapp_clone/core/widgets/custom_widgets/custom_popup_menu.dart';
+import 'package:whatsapp_clone/features/auth/view/auth.dart';
+import 'package:whatsapp_clone/features/onboarding/bloc/onboarding_bloc.dart';
+import 'package:whatsapp_clone/features/onboarding/bloc/onboarding_event.dart';
+import 'package:whatsapp_clone/features/onboarding/bloc/onboarding_state.dart';
 
-import '../../core/theme/app_color.dart';
-import 'language_screen/language_screen.dart';
+import '../../../core/theme/app_color.dart';
+import '../language/view/language_screen.dart';
 
-class WelcomeScreen extends StatefulWidget {
-  const WelcomeScreen({super.key});
+class Onboarding extends StatefulWidget {
+  const Onboarding({super.key});
 
 
   @override
-  State<WelcomeScreen> createState() => _WelcomeScreenState();
+  State<Onboarding> createState() => _OnboardingState();
 }
 
-class _WelcomeScreenState extends State<WelcomeScreen> {
-  WelcomeBloc welcomeBloc = WelcomeBloc();
+class _OnboardingState extends State<Onboarding> {
+  OnboardingBloc onboardingBloc = OnboardingBloc();
 
 
   @override
   void initState() {
-    welcomeBloc.add(ActionButtonClickedEvent());
+    onboardingBloc.add(ActionButtonClickedEvent());
     super.initState();
   }
 
@@ -37,8 +39,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         ),
       ],
     ),
-      body: BlocListener<WelcomeBloc, WelcomeState>(
-        bloc: welcomeBloc,
+      body: BlocListener<OnboardingBloc, OnboardingState>(
+        bloc: onboardingBloc,
         listener: (context, state) {
           if (state is ShowDropdownState) {
             print("showdropstate");
@@ -94,7 +96,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                         overlayColor: AppColor.grey
                     ),
                     onPressed: () {
-                      welcomeBloc.add(LanguageButtonClickedEvent());
+                      onboardingBloc.add(LanguageButtonClickedEvent());
                     },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -118,7 +120,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
                 ),
                 onPressed: () {
-                  welcomeBloc.add(AgreeAndContinueButtonClickedEvent());
+                  onboardingBloc.add(AgreeAndContinueButtonClickedEvent());
                 },
                 child: SizedBox(
                   width: double.maxFinite,

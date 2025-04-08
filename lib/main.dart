@@ -1,19 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:whatsapp_clone/core/theme/app_theme.dart';
-import 'package:whatsapp_clone/features/auth/auth.dart';
-import 'package:whatsapp_clone/features/auth/countryCodePage/country_code_page.dart';
-import 'package:whatsapp_clone/features/splashscreen/splash_screen.dart';
-import 'package:whatsapp_clone/features/welcomescreen/welcome_screen.dart';
+import 'package:whatsapp_clone/features/auth/view/auth.dart';
+import 'package:whatsapp_clone/features/auth/countryCodePage/view/country_code_page.dart';
+import 'package:whatsapp_clone/features/splash/view/splash_screen.dart';
+import 'package:whatsapp_clone/features/auth/bloc/auth_bloc.dart';
+
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+
+    BlocProvider(
+      create: (_) => AuthBloc(),
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
+  // This widgets is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

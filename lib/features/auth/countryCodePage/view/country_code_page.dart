@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:whatsapp_clone/core/theme/app_color.dart';
-import 'package:whatsapp_clone/features/auth/auth.dart';
 import 'package:whatsapp_clone/features/auth/countryCodePage/local_repository/country_code_data.dart';
 
 class CountryCodePage extends StatefulWidget {
@@ -53,7 +52,7 @@ class _CountryCodePageState extends State<CountryCodePage> {
                   ],
                 ),
                 Text(
-                  '${country.value['code']}',
+                  '+${country.value['code']}',
                   style: TextStyle(
                     color: AppColor.grey,
                     fontSize: 20,
@@ -63,8 +62,10 @@ class _CountryCodePageState extends State<CountryCodePage> {
               ],
             ),
             onTap: () {
-              Navigator.pop(context, country);
-              print('${country.key}: ${country.value}');
+              Navigator.pop(context, {
+                  'countryName' : country.key,
+                  'countryCode' : country.value['code'],
+              });
             },
           );
         },

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:whatsapp_clone/features/welcomescreen/local_repository/language_data.dart';
-import '../../../core/theme/app_color.dart';
+import 'package:whatsapp_clone/features/onboarding/language/local_repository/language_data.dart';
+import '../../../../core/theme/app_color.dart';
 
 class LanguageScreen extends StatefulWidget {
   const LanguageScreen({super.key});
@@ -30,7 +30,14 @@ class _LanguageScreenState extends State<LanguageScreen> {
               Row(
                 children: [
                   SizedBox(width: 10),
-                  Icon(Icons.close),
+                  GestureDetector(
+                    onTap: (){
+                      Navigator.of(context).pop();
+                    },
+                    child: Icon(
+                        Icons.close,
+                    ),
+                  ),
                   SizedBox(width: 30),
                   Text(
                     'App Language',

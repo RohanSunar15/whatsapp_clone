@@ -1,0 +1,231 @@
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:whatsapp_clone/core/theme/app_color.dart';
+import 'package:whatsapp_clone/core/widgets/custom_widgets/custom_button.dart';
+import 'package:whatsapp_clone/core/widgets/dialogs/dialog_utils.dart';
+import 'package:whatsapp_clone/features/auth/bloc/auth_bloc.dart';
+import 'package:whatsapp_clone/features/auth/countryCodePage/local_repository/country_code_data.dart';
+import 'package:whatsapp_clone/features/auth/countryCodePage/view/country_code_page.dart';
+
+class AuthPage extends StatefulWidget {
+  const AuthPage({super.key});
+
+  @override
+  State<AuthPage> createState() => _AuthPageState();
+
+
+}
+
+
+class _AuthPageState extends State<AuthPage> {
+  late TextEditingController countryCodeController;
+  late TextEditingController phoneNumberController;
+  String? selectedCountryName;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    countryCodeController = TextEditingController();
+    phoneNumberController = TextEditingController();
+  }
+
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocListener<AuthBloc, AuthState>(
+      listener: (context, state) {
+      if (state is AuthCountrySelected) {
+        countryCodeController.text = state.countryCode;
+        selectedCountryName = state.countryName;
+        setState(() {}); // this will safely update UI
+      }
+    },
+
+      child: Scaffold(
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          actions: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Icon(Icons.more_vert_outlined),
+            ),
+          ],
+        ),
+        body: Container(
+          color: AppColor.white,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SizedBox(height: 50),
+                Text(
+                  'Enter your phone number',
+                  style: TextStyle(
+                    color: AppColor.black,
+                    fontSize: 25,
+                    fontWeight: FontWeight.w400,
+                    decoration: TextDecoration.none,
+                  ),
+                ),
+                SizedBox(height: 30),
+                RichText(
+                  textAlign: TextAlign.center,
+                  text: TextSpan(
+                      text:
+                      'WhatsApp will need to verify your phone number. Carrier charges \nmay apply. ',
+                      style: TextStyle(
+                        color: AppColor.grey,
+                        fontSize: 19,
+                        decoration: TextDecoration.none,
+                      ),
+                      children: [
+                        TextSpan(text: 'What\'s my number?',
+
+                          style: TextStyle(
+                            color: AppColor.blue,
+                            fontSize: 16,
+                            decoration: TextDecoration.none,
+                          ),
+                        ),
+
+                      ]
+                  ),
+                ),
+                SizedBox(height: 20,),
+
+
+                BlocBuilder<AuthBloc, AuthState>(
+                  builder: (context, state) {
+                    return GestureDetector(
+                      onTap: () async {
+                        final result = await Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (_) => const CountryCodePage()),
+                        );
+
+                        if (result != null && result is Map) {
+                          context.read<AuthBloc>().add(
+                              CountrySelected(
+                                  countryName: result['countryName'],
+                                  countryCode: result['countryCode'])
+                          );
+                        }
+                      },
+                      child: AbsorbPointer(
+                        child: TextField(
+                          textAlign: TextAlign.center,
+                          decoration: InputDecoration(
+                            hintText: selectedCountryName ?? "Choose a country",
+                            hintStyle: TextStyle(
+                              fontSize: 19,
+                              color: Colors.black,
+                            ),
+                            suffixIcon: Icon(Icons.arrow_drop_down_sharp),
+                            suffixIconColor: AppColor.lightGreen,
+                            enabledBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(color: AppColor
+                                  .lightGreen), // Normal state
+                            ),
+                            focusedBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(color: Colors.lightGreen,
+                                  width: 5), // On focus
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+
+                Row(
+                  children: [
+                    SizedBox(
+                      width: 100,
+                      child: TextField(
+                        controller: countryCodeController,
+                        style: TextStyle(
+                          fontSize: 19,
+                          color: Colors.black,
+                        ),
+                        textAlign: TextAlign.left,
+                        decoration: InputDecoration(
+                          prefixIcon: Icon(Icons.add),
+                          enabledBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: AppColor
+                                .lightGreen), // Normal state
+                          ),
+                          focusedBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.lightGreen,
+                                width: 5), // On focus
+                          ),
+                        ),
+                      ),
+                    ),
+
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: TextFormField(
+                          controller: phoneNumberController,
+                          style: TextStyle(
+                              fontSize: 19
+                          ),
+                          keyboardType: TextInputType.number,
+                          inputFormatters: <TextInputFormatter>[
+                            FilteringTextInputFormatter.digitsOnly,
+                          ],
+                          textAlign: TextAlign.left,
+                          decoration: InputDecoration(
+                            hintText: 'Phone number',
+                            hintStyle: TextStyle(
+                                fontSize: 19,
+                                color: AppColor.grey
+                            ),
+                            enabledBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: AppColor.lightGreen), // Normal state
+                            ),
+                            focusedBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(color: Colors.lightGreen,
+                                  width: 5), // On focus
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+
+                  ],
+                ),
+                Spacer(),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 20),
+                  child: CustomOutlinedButton(
+                      borderRadius: 30,
+                      height: 50,
+                      width: 350,
+                      backgroundColor: AppColor.lightGreen,
+                      childWidget: Text('Next',
+                        style: TextStyle(
+                          color: AppColor.white,
+                          fontSize: 18,
+                        ),
+                      ),
+                      onPressed: () {
+                        DialogUtils.showConnectingDialog(context);
+                      }
+                  ),
+                ),
+
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+}
