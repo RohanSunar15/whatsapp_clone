@@ -12,4 +12,8 @@ class AuthCountrySelected extends AuthState{
   AuthCountrySelected({required this.countryName, required this.countryCode});
 }
 
-class
+class CountryCodeInvalid extends AuthState{
+  final String countryCode;
+
+  CountryCodeInvalid({required this.countryCode});
+}

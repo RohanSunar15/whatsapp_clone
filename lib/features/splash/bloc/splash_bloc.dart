@@ -14,10 +14,7 @@ class SplashScreenBloc extends Bloc<SplashScreenEvent, SplashScreenState> {
   }
 
   FutureOr<void> navigateToChatScreen(NavigateToChatScreenEvent event, Emitter<SplashScreenState> emit) async{
-    print('going to Welcome Screen');
-
     await Future.delayed(Duration(seconds: 1));
-
     emit(SplashScreenToWelcomeScreenState());
   }
 }

@@ -17,8 +17,9 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   void initState() {
-    splashScreenBloc.add(NavigateToChatScreenEvent());
     super.initState();
+    splashScreenBloc.add(NavigateToChatScreenEvent());
+
   }
 
   @override

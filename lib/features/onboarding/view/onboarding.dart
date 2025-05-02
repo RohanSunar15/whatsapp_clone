@@ -23,8 +23,8 @@ class _OnboardingState extends State<Onboarding> {
 
   @override
   void initState() {
-    onboardingBloc.add(ActionButtonClickedEvent());
     super.initState();
+    onboardingBloc.add(ActionButtonClickedEvent());
   }
 
   @override

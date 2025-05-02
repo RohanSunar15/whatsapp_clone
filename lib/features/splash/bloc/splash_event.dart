@@ -4,4 +4,4 @@
 sealed class SplashScreenEvent {}
 
 
-   class NavigateToChatScreenEvent extends SplashScreenEvent{}
+final class NavigateToChatScreenEvent extends SplashScreenEvent{}

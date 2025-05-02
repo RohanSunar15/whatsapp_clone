@@ -5,8 +5,7 @@ import 'package:whatsapp_clone/core/theme/app_color.dart';
 import 'package:whatsapp_clone/core/widgets/custom_widgets/custom_button.dart';
 import 'package:whatsapp_clone/core/widgets/dialogs/dialog_utils.dart';
 import 'package:whatsapp_clone/features/auth/bloc/auth_bloc.dart';
-import 'package:whatsapp_clone/features/auth/countryCodePage/local_repository/country_code_data.dart';
-import 'package:whatsapp_clone/features/auth/countryCodePage/view/country_code_page.dart';
+import 'package:whatsapp_clone/features/countryCodePage/view/country_code_page.dart';
 
 class AuthPage extends StatefulWidget {
   const AuthPage({super.key});
@@ -36,12 +35,12 @@ class _AuthPageState extends State<AuthPage> {
   Widget build(BuildContext context) {
     return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
-      if (state is AuthCountrySelected) {
-        countryCodeController.text = state.countryCode;
-        selectedCountryName = state.countryName;
-        setState(() {}); // this will safely update UI
-      }
-    },
+        if (state is AuthCountrySelected) {
+          countryCodeController.text = state.countryCode;
+          selectedCountryName = state.countryName;
+          setState(() {}); // this will safely update UI
+        }
+      },
 
       child: Scaffold(
         appBar: AppBar(
@@ -96,7 +95,7 @@ class _AuthPageState extends State<AuthPage> {
                 ),
                 SizedBox(height: 20,),
 
-
+                // Country Name TextField
                 BlocBuilder<AuthBloc, AuthState>(
                   builder: (context, state) {
                     return GestureDetector(
@@ -141,64 +140,80 @@ class _AuthPageState extends State<AuthPage> {
                   },
                 ),
 
-                Row(
-                  children: [
-                    SizedBox(
-                      width: 100,
-                      child: TextField(
-                        controller: countryCodeController,
-                        style: TextStyle(
-                          fontSize: 19,
-                          color: Colors.black,
-                        ),
-                        textAlign: TextAlign.left,
-                        decoration: InputDecoration(
-                          prefixIcon: Icon(Icons.add),
-                          enabledBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color: AppColor
-                                .lightGreen), // Normal state
+                // Country Code TextField
+                BlocBuilder<AuthBloc, AuthState>(
+                  builder: (context, state) {
+                    return Row(
+                      children: [
+                        SizedBox(
+                          width: 100,
+                          child: TextField(
+                            onChanged: (value) {
+                              context.read<AuthBloc>().add(CountryCodeChanged(
+                                  countryCodeController.text));
+                            },
+                            controller: countryCodeController,
+                            keyboardType: TextInputType.number,
+                            inputFormatters: <TextInputFormatter>[
+                              FilteringTextInputFormatter.digitsOnly,
+                              LengthLimitingTextInputFormatter(3),
+                            ],
+                            style: TextStyle(
+                              fontSize: 19,
+                              color: Colors.black,
+                            ),
+                            textAlign: TextAlign.left,
+                            decoration: InputDecoration(
+                              prefixIcon: Icon(Icons.add),
+                              enabledBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(color: AppColor
+                                    .lightGreen), // Normal state
+                              ),
+                              focusedBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(color: Colors.lightGreen,
+                                    width: 5), // On focus
+                              ),
+                            ),
                           ),
-                          focusedBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.lightGreen,
-                                width: 5), // On focus
-                          ),
                         ),
-                      ),
-                    ),
 
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: TextFormField(
-                          controller: phoneNumberController,
-                          style: TextStyle(
-                              fontSize: 19
-                          ),
-                          keyboardType: TextInputType.number,
-                          inputFormatters: <TextInputFormatter>[
-                            FilteringTextInputFormatter.digitsOnly,
-                          ],
-                          textAlign: TextAlign.left,
-                          decoration: InputDecoration(
-                            hintText: 'Phone number',
-                            hintStyle: TextStyle(
-                                fontSize: 19,
-                                color: AppColor.grey
-                            ),
-                            enabledBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(
-                                  color: AppColor.lightGreen), // Normal state
-                            ),
-                            focusedBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(color: Colors.lightGreen,
-                                  width: 5), // On focus
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: TextFormField(
+                              controller: phoneNumberController,
+                              style: TextStyle(
+                                  fontSize: 19
+                              ),
+                              keyboardType: TextInputType.number,
+                              inputFormatters: <TextInputFormatter>[
+                                FilteringTextInputFormatter.digitsOnly,
+                              ],
+                              textAlign: TextAlign.left,
+                              decoration: InputDecoration(
+                                hintText: 'Phone number',
+                                hintStyle: TextStyle(
+                                    fontSize: 19,
+                                    color: AppColor.grey
+                                ),
+                                enabledBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: AppColor
+                                          .lightGreen), // Normal state
+                                ),
+                                focusedBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Colors.lightGreen,
+                                      width: 5), // On focus
+                                ),
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                    ),
 
-                  ],
+                      ],
+                    );
+                  },
                 ),
                 Spacer(),
                 Padding(

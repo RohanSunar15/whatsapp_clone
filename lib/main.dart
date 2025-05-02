@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:whatsapp_clone/core/theme/app_theme.dart';
-import 'package:whatsapp_clone/features/auth/view/auth.dart';
-import 'package:whatsapp_clone/features/auth/countryCodePage/view/country_code_page.dart';
 import 'package:whatsapp_clone/features/splash/view/splash_screen.dart';
 import 'package:whatsapp_clone/features/auth/bloc/auth_bloc.dart';
 
@@ -11,8 +9,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 void main() {
   runApp(
 
-    BlocProvider(
-      create: (_) => AuthBloc(),
+    MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (_) => AuthBloc(),
+          child: const MyApp(),
+        ),
+      ],
       child: const MyApp(),
     ),
   );

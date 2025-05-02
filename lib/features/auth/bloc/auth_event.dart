@@ -11,8 +11,9 @@ class CountrySelected extends AuthEvent {
   CountrySelected({required this.countryName, required this.countryCode});
 }
 
-class ChangedCountryCode extends AuthEvent{
+class CountryCodeChanged extends AuthEvent{
   final String countryCode;
 
-  ChangedCountryCode(this.countryCode);
+  CountryCodeChanged(this.countryCode);
 }
+
