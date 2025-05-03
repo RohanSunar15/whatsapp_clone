@@ -10,8 +10,8 @@ part 'auth_state.dart';
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   AuthBloc() : super(AuthInitial()) {
     on<CountrySelected>(_countrySelected);
-
     on<CountryCodeChanged>(_countryCodeChanged);
+    on<PhoneNumberChanged>(_phoneNumberChanged);
   }
 
   FutureOr<void> _countrySelected(CountrySelected event, Emitter<AuthState> emit) {
@@ -54,5 +54,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           countryCode: event.countryCode
       ));
     }
+  }
+
+  FutureOr<void> _phoneNumberChanged(PhoneNumberChanged event, Emitter<AuthState> emit) {
+    final phoneNumberEntered = event.phoneNumber;
+    print(phoneNumberEntered);
+
+
   }
 }

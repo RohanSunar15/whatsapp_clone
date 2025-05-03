@@ -30,101 +30,143 @@ class _AuthPageState extends State<AuthPage> {
     phoneNumberController = TextEditingController();
   }
 
+  @override
+  void dispose() {
+    countryCodeController.dispose();
+    phoneNumberController.dispose();
+    super.dispose();
+  }
+
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<AuthBloc, AuthState>(
-      listener: (context, state) {
-        if (state is AuthCountrySelected) {
-          countryCodeController.text = state.countryCode;
-          selectedCountryName = state.countryName;
-          setState(() {}); // this will safely update UI
-        }
-      },
-
-      child: Scaffold(
-        appBar: AppBar(
-          automaticallyImplyLeading: false,
-          actions: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Icon(Icons.more_vert_outlined),
-            ),
-          ],
-        ),
-        body: Container(
-          color: AppColor.white,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                SizedBox(height: 50),
-                Text(
-                  'Enter your phone number',
-                  style: TextStyle(
-                    color: AppColor.black,
-                    fontSize: 25,
-                    fontWeight: FontWeight.w400,
-                    decoration: TextDecoration.none,
+    return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        actions: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Icon(Icons.more_vert_outlined),
+          ),
+        ],
+      ),
+      body: BlocConsumer<AuthBloc, AuthState>(
+        listener: (context, state) {
+          if (state is AuthCountrySelected) {
+            countryCodeController.text = state.countryCode;
+            selectedCountryName = state.countryName;
+          }
+        },
+        builder: (context, state) {
+          return Container(
+            color: AppColor.white,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                  horizontal: 30.0, vertical: 0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  SizedBox(height: 50),
+                  Text(
+                    'Enter your phone number',
+                    style: TextStyle(
+                      color: AppColor.black,
+                      fontSize: 25,
+                      fontWeight: FontWeight.w400,
+                      decoration: TextDecoration.none,
+                    ),
                   ),
-                ),
-                SizedBox(height: 30),
-                RichText(
-                  textAlign: TextAlign.center,
-                  text: TextSpan(
-                      text:
-                      'WhatsApp will need to verify your phone number. Carrier charges \nmay apply. ',
-                      style: TextStyle(
-                        color: AppColor.grey,
-                        fontSize: 19,
-                        decoration: TextDecoration.none,
-                      ),
-                      children: [
-                        TextSpan(text: 'What\'s my number?',
+                  SizedBox(height: 30),
+                  RichText(
+                    textAlign: TextAlign.center,
+                    text: TextSpan(
+                        text:
+                        'WhatsApp will need to verify your phone number. Carrier charges \nmay apply. ',
+                        style: TextStyle(
+                          color: AppColor.grey,
+                          fontSize: 19,
+                          decoration: TextDecoration.none,
+                        ),
+                        children: [
+                          TextSpan(text: 'What\'s my number?',
 
-                          style: TextStyle(
-                            color: AppColor.blue,
-                            fontSize: 16,
-                            decoration: TextDecoration.none,
+                            style: TextStyle(
+                              color: AppColor.blue,
+                              fontSize: 16,
+                              decoration: TextDecoration.none,
+                            ),
+                          ),
+
+                        ]
+                    ),
+                  ),
+                  SizedBox(height: 20,),
+
+                  // Country Name TextField
+                  GestureDetector(
+                    onTap: () async {
+                      final result = await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (_) => const CountryCodePage()),
+                      );
+
+                      if (result != null && result is Map) {
+                        context.read<AuthBloc>().add(
+                            CountrySelected(
+                                countryName: result['countryName'],
+                                countryCode: result['countryCode'])
+                        );
+                      }
+                    },
+                    child: AbsorbPointer(
+                      child: TextField(
+                        textAlign: TextAlign.center,
+                        decoration: InputDecoration(
+                          hintText: selectedCountryName ?? "Choose a country",
+                          hintStyle: TextStyle(
+                            fontSize: 19,
+                            color: Colors.black,
+                          ),
+                          suffixIcon: Icon(Icons.arrow_drop_down_sharp),
+                          suffixIconColor: AppColor.lightGreen,
+                          enabledBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: AppColor
+                                .lightGreen), // Normal state
+                          ),
+                          focusedBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.lightGreen,
+                                width: 5), // On focus
                           ),
                         ),
-
-                      ]
+                      ),
+                    ),
                   ),
-                ),
-                SizedBox(height: 20,),
 
-                // Country Name TextField
-                BlocBuilder<AuthBloc, AuthState>(
-                  builder: (context, state) {
-                    return GestureDetector(
-                      onTap: () async {
-                        final result = await Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (_) => const CountryCodePage()),
-                        );
-
-                        if (result != null && result is Map) {
-                          context.read<AuthBloc>().add(
-                              CountrySelected(
-                                  countryName: result['countryName'],
-                                  countryCode: result['countryCode'])
-                          );
-                        }
-                      },
-                      child: AbsorbPointer(
+                  Row(
+                    children: [
+                // Country Code TextField
+                      SizedBox(
+                        width: 100,
                         child: TextField(
-                          textAlign: TextAlign.center,
+                          onChanged: (value) {
+                            context.read<AuthBloc>().add(CountryCodeChanged(
+                                countryCodeController.text));
+                          },
+                          controller: countryCodeController,
+                          keyboardType: TextInputType.number,
+                          inputFormatters: <TextInputFormatter>[
+                            FilteringTextInputFormatter.digitsOnly,
+                            LengthLimitingTextInputFormatter(3),
+                          ],
+                          style: TextStyle(
+                            fontSize: 19,
+                            color: Colors.black,
+                          ),
+                          textAlign: TextAlign.left,
                           decoration: InputDecoration(
-                            hintText: selectedCountryName ?? "Choose a country",
-                            hintStyle: TextStyle(
-                              fontSize: 19,
-                              color: Colors.black,
-                            ),
-                            suffixIcon: Icon(Icons.arrow_drop_down_sharp),
-                            suffixIconColor: AppColor.lightGreen,
+                            prefixIcon: Icon(
+                              Icons.add, size: 20, color: AppColor.grey,),
                             enabledBorder: UnderlineInputBorder(
                               borderSide: BorderSide(color: AppColor
                                   .lightGreen), // Normal state
@@ -136,109 +178,73 @@ class _AuthPageState extends State<AuthPage> {
                           ),
                         ),
                       ),
-                    );
-                  },
-                ),
 
-                // Country Code TextField
-                BlocBuilder<AuthBloc, AuthState>(
-                  builder: (context, state) {
-                    return Row(
-                      children: [
-                        SizedBox(
-                          width: 100,
-                          child: TextField(
+                      //Phone Number TextField
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: TextFormField(
                             onChanged: (value) {
-                              context.read<AuthBloc>().add(CountryCodeChanged(
-                                  countryCodeController.text));
+                              context.read<AuthBloc>().add(PhoneNumberChanged(
+                                  phoneNumber: phoneNumberController.text));
                             },
-                            controller: countryCodeController,
+                            controller: phoneNumberController,
+                            style: TextStyle(
+                                fontSize: 19
+                            ),
                             keyboardType: TextInputType.number,
                             inputFormatters: <TextInputFormatter>[
                               FilteringTextInputFormatter.digitsOnly,
-                              LengthLimitingTextInputFormatter(3),
                             ],
-                            style: TextStyle(
-                              fontSize: 19,
-                              color: Colors.black,
-                            ),
                             textAlign: TextAlign.left,
                             decoration: InputDecoration(
-                              prefixIcon: Icon(Icons.add),
+                              hintText: 'Phone number',
+                              hintStyle: TextStyle(
+                                  fontSize: 19,
+                                  color: AppColor.grey
+                              ),
                               enabledBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(color: AppColor
-                                    .lightGreen), // Normal state
+                                borderSide: BorderSide(
+                                    color: AppColor
+                                        .lightGreen), // Normal state
                               ),
                               focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(color: Colors.lightGreen,
+                                borderSide: BorderSide(
+                                    color: Colors.lightGreen,
                                     width: 5), // On focus
                               ),
                             ),
                           ),
                         ),
+                      ),
 
-                        Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: TextFormField(
-                              controller: phoneNumberController,
-                              style: TextStyle(
-                                  fontSize: 19
-                              ),
-                              keyboardType: TextInputType.number,
-                              inputFormatters: <TextInputFormatter>[
-                                FilteringTextInputFormatter.digitsOnly,
-                              ],
-                              textAlign: TextAlign.left,
-                              decoration: InputDecoration(
-                                hintText: 'Phone number',
-                                hintStyle: TextStyle(
-                                    fontSize: 19,
-                                    color: AppColor.grey
-                                ),
-                                enabledBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(
-                                      color: AppColor
-                                          .lightGreen), // Normal state
-                                ),
-                                focusedBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(
-                                      color: Colors.lightGreen,
-                                      width: 5), // On focus
-                                ),
-                              ),
-                            ),
+                    ],
+                  ),
+                  Spacer(),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 20),
+                    child: CustomOutlinedButton(
+                        borderRadius: 30,
+                        height: 50,
+                        width: 350,
+                        backgroundColor: AppColor.lightGreen,
+                        childWidget: Text('Next',
+                          style: TextStyle(
+                            color: AppColor.white,
+                            fontSize: 18,
                           ),
                         ),
-
-                      ],
-                    );
-                  },
-                ),
-                Spacer(),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 20),
-                  child: CustomOutlinedButton(
-                      borderRadius: 30,
-                      height: 50,
-                      width: 350,
-                      backgroundColor: AppColor.lightGreen,
-                      childWidget: Text('Next',
-                        style: TextStyle(
-                          color: AppColor.white,
-                          fontSize: 18,
-                        ),
-                      ),
-                      onPressed: () {
-                        DialogUtils.showConnectingDialog(context);
-                      }
+                        onPressed: () {
+                          DialogUtils.showConnectingDialog(context);
+                        }
+                    ),
                   ),
-                ),
 
-              ],
-            ),
+                ],
+              ),
           ),
-        ),
+          );
+        },
       ),
     );
   }

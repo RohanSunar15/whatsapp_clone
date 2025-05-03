@@ -4,16 +4,22 @@ part of 'auth_bloc.dart';
 sealed class AuthEvent {}
 
 
-class CountrySelected extends AuthEvent {
+final class CountrySelected extends AuthEvent {
   final String countryName;
   final String countryCode;
 
   CountrySelected({required this.countryName, required this.countryCode});
 }
 
-class CountryCodeChanged extends AuthEvent{
+final class CountryCodeChanged extends AuthEvent{
   final String countryCode;
 
   CountryCodeChanged(this.countryCode);
 }
 
+
+final class PhoneNumberChanged extends AuthEvent{
+  final String phoneNumber;
+
+  PhoneNumberChanged({required this.phoneNumber});
+}
