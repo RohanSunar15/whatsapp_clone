@@ -2,10 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:whatsapp_clone/core/theme/app_color.dart';
 import 'package:whatsapp_clone/core/widgets/custom_widgets/custom_show_dialog.dart';
 import 'package:whatsapp_clone/core/widgets/custom_widgets/custom_text_button.dart';
-import 'package:whatsapp_clone/features/auth/view/auth.dart';
 
 class DialogUtils {
-  static void showConnectingDialog(BuildContext context) {
+  static void showConnectingDialogBox(BuildContext context) {
     showDialog(
       context: context,
       builder: (_) => CustomShowDialog(
@@ -27,44 +26,34 @@ class DialogUtils {
     );
   }
 
-  static void showConfirmNumberDialogBox (BuildContext context){
+  static void showInvalidCountryCodeDialogBox(BuildContext context) {
     showDialog(
         context: context,
         builder: (_) =>
             CustomShowDialog(
-              title: Text('Is this the correct number?', style: TextStyle(
+                title: Text('Invalid country code length (1-3 digit only).',
+                  style: TextStyle(
                 fontSize: 17,
+                      color: AppColor.grey
               ),),
-              widget: Column(
-                children: [
-                  Text('?????'),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      CustomTextButton(
-                        text: 'Edit',
-                        textColor: AppColor.green,
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                      ),
+                widget: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    CustomTextButton(
+                      text: 'OK',
+                      textColor: AppColor.green,
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
 
-                      SizedBox(width: 15,),
-                      CustomTextButton(
-                        text: 'Yes',
-                        textColor: AppColor.green,
-                        onPressed: () {},
-                      ),
-                    ],
-                  )
-                ],
-              ),
+                    ),
+                  ],
+                )
             )
     );
   }
 
-
-  static void showEnterPhoneDialog(BuildContext context) {
+  static void showEnterPhoneDialogBox(BuildContext context) {
     showDialog(
         context: context,
         builder: (_) =>
@@ -92,9 +81,126 @@ class DialogUtils {
     );
   }
 
+  static void showPhoneNumberExceedsLimitDialogBox(BuildContext context) {
+    showDialog(
+        context: context,
+        builder: (_) =>
+            CustomShowDialog(
+                title: Text(
+                  'The Phone number you entered is too long for the country: India',
+                  style: TextStyle(
+                      fontSize: 17,
+                      color: AppColor.grey
+                  ),),
+                widget: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    CustomTextButton(
+                      text: 'OK',
+                      textColor: AppColor.green,
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
 
+                    ),
+                  ],
+                )
+            )
+    );
+  }
 
-  static void showErrorDialog(BuildContext context, String message) {
+  static void showPhoneNumberUnderLimitDialogBox(BuildContext context) {
+    showDialog(
+        context: context,
+        builder: (_) =>
+            CustomShowDialog(
+                title: Column(
+                  children: [
+                    Text(
+                      'The phone number you entered is too short for the country: India',
+                      style: TextStyle(
+                          fontSize: 17,
+                          color: AppColor.grey
+                      ),),
+                    SizedBox(height: 10,),
+                    Text('Include your area code if you haven\'t. ',
+                      style: TextStyle(
+                          fontSize: 17,
+                          color: AppColor.grey
+                      ),),
+                  ],
+                ),
+                widget: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    CustomTextButton(
+                      text: 'OK',
+                      textColor: AppColor.green,
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+
+                    ),
+                  ],
+                )
+            )
+    );
+  }
+
+  static void showConfirmNumberDialogBox(BuildContext context,
+      { required String phoneNumber,
+        required String countryCode,
+        required VoidCallback onEditPressed,
+        required VoidCallback onYesPressed,
+      }) {
+    showDialog(
+        context: context,
+        builder: (_) =>
+            CustomShowDialog(
+              title: Text('Is this the correct number?', style: TextStyle(
+                fontSize: 17,
+              ),
+              ),
+              dialogHeight: 90,
+              widget: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Text('+$countryCode $phoneNumber',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 25,
+
+                        ),
+                        textAlign: TextAlign.start,
+                      ),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      CustomTextButton(
+                        text: 'Edit',
+                        textColor: AppColor.green,
+                        onPressed: onEditPressed
+                      ),
+
+                      SizedBox(width: 15,),
+                      CustomTextButton(
+                        text: 'Yes',
+                        textColor: AppColor.green,
+                        onPressed: onYesPressed,
+                      ),
+                    ],
+                  )
+                ],
+              ),
+            )
+    );
+  }
+
+  static void showErrorDialogBox(BuildContext context, String message) {
     showDialog(
       context: context,
       builder: (_) => CustomShowDialog(

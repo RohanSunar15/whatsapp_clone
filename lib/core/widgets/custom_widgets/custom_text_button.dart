@@ -22,6 +22,11 @@ class CustomTextButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextButton(
       onPressed: onPressed,
+      style: ButtonStyle(
+        overlayColor: WidgetStateProperty.all(Colors.transparent), // Remove ripple
+        splashFactory: NoSplash.splashFactory, // No splash effect
+        foregroundColor: WidgetStateProperty.all(textColor), // Text color
+      ),
       child: Text(
         text,
         style: TextStyle(

@@ -12,6 +12,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<CountrySelected>(_countrySelected);
     on<CountryCodeChanged>(_countryCodeChanged);
     on<PhoneNumberChanged>(_phoneNumberChanged);
+    on<NextButtonClicked>(_nextButtonClicked);
   }
 
   FutureOr<void> _countrySelected(CountrySelected event, Emitter<AuthState> emit) {
@@ -57,9 +58,47 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   }
 
   FutureOr<void> _phoneNumberChanged(PhoneNumberChanged event, Emitter<AuthState> emit) {
+    final countryCode = event.countryCode;
     final phoneNumberEntered = event.phoneNumber;
-    print(phoneNumberEntered);
+
+    if (countryCode == '91') {
+      String formatted;
+      if (phoneNumberEntered.length > 5 && phoneNumberEntered.length < 11) {
+        formatted = '${phoneNumberEntered.substring(0, 5)} ${phoneNumberEntered.substring(5)}';
+      } else {
+        formatted = phoneNumberEntered;
+      }
+      emit(PhoneNumberFormatted(formattedPhoneNumber: formatted));
+    }
+  }
+
+  FutureOr<void> _nextButtonClicked(NextButtonClicked event,
+      Emitter<AuthState> emit) async {
+    final countryCode = event.countryCode;
+    final phoneNumberEntered = event.phoneNumber;
+
+    if (countryCode.isEmpty) {
+      emit(FormBothFieldsEmpty());
+    } else if (phoneNumberEntered.isEmpty) {
+      emit(FormPhoneMissing());
+    } else if (phoneNumberEntered.length < 11) {
+      emit(PhoneAuthLoading());
+      await Future.delayed(Duration(seconds: 2));
+      emit(PhoneNumberUnderLimit());
+    } else if (phoneNumberEntered.length > 11) {
+      emit(PhoneAuthLoading());
+      await Future.delayed(Duration(seconds: 2));
+      emit(PhoneNumberExceedsLimit());
+    } else {
+      emit(PhoneAuthLoading());
+      await Future.delayed(Duration(seconds: 2));
+      final phoneNumber = '+$countryCode $phoneNumberEntered';
+      emit(AuthFormValidation(phoneWithCountryCode: phoneNumber));
+    }
+
 
 
   }
+
+
 }

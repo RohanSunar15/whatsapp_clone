@@ -52,10 +52,40 @@ class _AuthPageState extends State<AuthPage> {
       ),
       body: BlocConsumer<AuthBloc, AuthState>(
         listener: (context, state) {
-          if (state is AuthCountrySelected) {
+          if (state is PhoneAuthLoading) {
+            DialogUtils.showConnectingDialogBox(context);
+          } else if (state is AuthCountrySelected) {
             countryCodeController.text = state.countryCode;
             selectedCountryName = state.countryName;
+          } else if (state is FormBothFieldsEmpty) {
+            DialogUtils.showInvalidCountryCodeDialogBox(context);
+          } else if (state is FormPhoneMissing) {
+            DialogUtils.showEnterPhoneDialogBox(context);
+          } else if (state is PhoneNumberFormatted) {
+            phoneNumberController.value = TextEditingValue(
+              text: state.formattedPhoneNumber,
+              selection: TextSelection.collapsed(
+                  offset: state.formattedPhoneNumber.length),
+            );
+          } else if (state is PhoneNumberUnderLimit) {
+            Navigator.pop(context);
+            DialogUtils.showPhoneNumberUnderLimitDialogBox(context);
+          } else if (state is PhoneNumberExceedsLimit) {
+            Navigator.pop(context);
+            DialogUtils.showPhoneNumberExceedsLimitDialogBox(context);
+          } else if (state is AuthFormValidation) {
+            Navigator.pop(context);
+            DialogUtils.showConfirmNumberDialogBox(
+                context,
+              phoneNumber: phoneNumberController.text,
+              countryCode: countryCodeController.text,
+              onEditPressed: (){
+                  Navigator.pop(context);
+              },
+              onYesPressed: (){}
+            );
           }
+
         },
         builder: (context, state) {
           return Container(
@@ -151,7 +181,8 @@ class _AuthPageState extends State<AuthPage> {
                         child: TextField(
                           onChanged: (value) {
                             context.read<AuthBloc>().add(CountryCodeChanged(
-                                countryCodeController.text));
+                                countryCode: value
+                            ));
                           },
                           controller: countryCodeController,
                           keyboardType: TextInputType.number,
@@ -185,8 +216,9 @@ class _AuthPageState extends State<AuthPage> {
                           padding: const EdgeInsets.all(8.0),
                           child: TextFormField(
                             onChanged: (value) {
-                              context.read<AuthBloc>().add(PhoneNumberChanged(
-                                  phoneNumber: phoneNumberController.text));
+                              context.read<AuthBloc>().add(
+                                  PhoneNumberChanged(phoneNumber: value,
+                                      countryCode: countryCodeController.text));
                             },
                             controller: phoneNumberController,
                             style: TextStyle(
@@ -235,7 +267,9 @@ class _AuthPageState extends State<AuthPage> {
                           ),
                         ),
                         onPressed: () {
-                          DialogUtils.showConnectingDialog(context);
+                          context.read<AuthBloc>().add(NextButtonClicked(
+                              countryCode: countryCodeController.text,
+                              phoneNumber: phoneNumberController.text));
                         }
                     ),
                   ),
