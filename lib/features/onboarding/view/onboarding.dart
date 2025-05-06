@@ -43,7 +43,6 @@ class _OnboardingState extends State<Onboarding> {
         bloc: onboardingBloc,
         listener: (context, state) {
           if (state is ShowDropdownState) {
-            print("showdropstate");
           } else if (state is WelcomeToLanguageScreenState) {
            _showLanguageBottomSheet(context);
           } else if (state is  WelcomeToAuthenticationScreenState) {
@@ -60,7 +59,7 @@ class _OnboardingState extends State<Onboarding> {
                 child: Image.asset('assets/images/welcome_image.png', scale: 4),
               ),
               Text('Welcome to WhatsApp', style: TextStyle(fontSize: 25)),
-              SizedBox(height: 20),
+              SizedBox(height: 0),
               Center(
                 child: RichText(
                   text: TextSpan(
@@ -87,7 +86,7 @@ class _OnboardingState extends State<Onboarding> {
                   ),
                 ),
               ),
-              SizedBox(height: 10),
+              SizedBox(height: 5),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 100.0),
                 child: ElevatedButton(
@@ -113,7 +112,7 @@ class _OnboardingState extends State<Onboarding> {
                       ],
                     )),
               ),
-              SizedBox(height: 10),
+              SizedBox(height: 5),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColor.lightGreen,
@@ -152,15 +151,3 @@ Future _showLanguageBottomSheet(context){
 
 
 
-Widget _showPopupMenuWidget() {
-  List<String> items = ["Help"];
-
-  return Center(
-    child: CustomPopupMenu(
-      items: items,
-      onSelected: (String value) {
-        print(value);
-      },
-    ),
-  );
-}
