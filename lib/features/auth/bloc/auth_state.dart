@@ -29,24 +29,6 @@ final class AuthFormValidation extends AuthState {
   AuthFormValidation({required this.phoneWithCountryCode ,});
 }
 
-
-final class FormError extends AuthState {
-}
-
-/// Triggered when OTP is verified successfully
-final class PhoneAuthSuccess extends AuthState {}
-
-/// Triggered when OTP is successfully sent
-final class OtpSendSuccess extends AuthState {}
-
-/// Triggered when there is an error in auth flow
-final class AuthFailure extends AuthState {
-  final String message;
-
-  AuthFailure({required this.message});
-
-}
-
 /// Triggered when user selects a country
 final class AuthCountrySelected extends AuthState{
   final String countryName;
@@ -56,10 +38,44 @@ final class AuthCountrySelected extends AuthState{
 }
 
 /// Triggered when an invalid country code is selected
-///
 final class CountryCodeInvalid extends AuthState{
   final String countryCode;
 
   CountryCodeInvalid({required this.countryCode});
 }
 
+
+
+//OTP VERIFICATION SCREEN
+final class OtpUpdated extends AuthState{
+  final String otp;
+  final int cursorPosition;
+
+  OtpUpdated({required this.otp, required this.cursorPosition});
+
+}
+
+class OtpSentState extends AuthState {
+  final String verificationId;
+
+  OtpSentState(this.verificationId);
+}
+
+
+final class OtpVerificationLoading extends AuthState{}
+
+final class OtpVerificationFailure extends AuthState{}
+
+final class OtpVerifying extends AuthState{}
+
+final class Authenticated extends AuthState{}
+
+final class AuthSuccess extends AuthState{}
+
+/// Triggered when there is an error in auth flow
+final class AuthFailure extends AuthState {
+final String message;
+
+AuthFailure({required this.message});
+
+}

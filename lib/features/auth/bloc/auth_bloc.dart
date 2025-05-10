@@ -1,18 +1,26 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:meta/meta.dart';
+import 'package:whatsapp_clone/features/auth/repository/auth_repository.dart';
 import 'package:whatsapp_clone/features/countryCodePage/local_repository/country_code_data.dart';
 
 part 'auth_event.dart';
 part 'auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
-  AuthBloc() : super(AuthInitial()) {
+  final AuthRepository _repository;
+
+  AuthBloc(this._repository) : super(AuthInitial()) {
     on<CountrySelected>(_countrySelected);
     on<CountryCodeChanged>(_countryCodeChanged);
     on<PhoneNumberChanged>(_phoneNumberChanged);
     on<NextButtonClicked>(_nextButtonClicked);
+    on<SendOtp>(_sendOtp);
+    // otp screen
+    on<OtpChanged>(_otpChanged);
+    on<VerifyOtp>(_verifyOtp);
   }
 
   FutureOr<void> _countrySelected(CountrySelected event, Emitter<AuthState> emit) {
@@ -77,28 +85,81 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     final countryCode = event.countryCode;
     final phoneNumberEntered = event.phoneNumber;
 
-    if (countryCode.isEmpty) {
+    if (countryCode.isEmpty && phoneNumberEntered.isEmpty) {
       emit(FormBothFieldsEmpty());
     } else if (phoneNumberEntered.isEmpty) {
       emit(FormPhoneMissing());
-    } else if (phoneNumberEntered.length < 11) {
-      emit(PhoneAuthLoading());
-      await Future.delayed(Duration(seconds: 2));
-      emit(PhoneNumberUnderLimit());
-    } else if (phoneNumberEntered.length > 11) {
-      emit(PhoneAuthLoading());
-      await Future.delayed(Duration(seconds: 2));
-      emit(PhoneNumberExceedsLimit());
     } else {
       emit(PhoneAuthLoading());
       await Future.delayed(Duration(seconds: 2));
-      final phoneNumber = '+$countryCode $phoneNumberEntered';
-      emit(AuthFormValidation(phoneWithCountryCode: phoneNumber));
+      if (phoneNumberEntered.length < 11) {
+        emit(PhoneNumberUnderLimit());
+      } else if (phoneNumberEntered.length > 11) {
+        emit(PhoneNumberExceedsLimit());
+      } else {
+        final phoneNumber = '+$countryCode $phoneNumberEntered';
+        emit(AuthFormValidation(phoneWithCountryCode: phoneNumber));
+      }
     }
-
-
-
   }
 
 
+  FutureOr<void> _sendOtp(SendOtp event, Emitter<AuthState> emit) async {
+    final completer = Completer<void>();
+
+    _repository.verifyPhone(
+      event.phoneNumber,
+          (verificationId) {
+        emit(OtpSentState(verificationId));
+        completer.complete();
+      },
+          (_) {
+        emit(Authenticated());
+        completer.complete();
+      },
+          (error) {
+        emit(AuthFailure(message: error));
+        completer.complete();
+      },
+    );
+
+    await completer.future;
+  }
+
+
+
+
+//otp verification screen
+  FutureOr<void> _otpChanged(OtpChanged event, Emitter<AuthState> emit) {
+    final rawOtp = event.otp;
+
+    final maxLength = 6;
+    final placeholderChar = '_';
+
+    final padded = rawOtp.padRight(maxLength, placeholderChar);
+
+    final formatted = '${padded.substring(0, 3)} ${padded.substring(3)}';
+
+    int cursor = rawOtp.length;
+    if (cursor > 3) cursor += 1;
+
+    emit(OtpUpdated(otp: formatted, cursorPosition: cursor));
+  }
+
+
+
+  FutureOr<void> _verifyOtp(VerifyOtp event, Emitter<AuthState> emit) async{
+    try{
+      emit(OtpVerificationLoading());
+      await _repository.verifyOTP(event.verificationId, event.otp);
+      emit(AuthSuccess());
+    } on FirebaseAuthException catch(e){
+      if (e.code == 'invalid-verification-code') {
+        emit(OtpVerificationFailure());
+        throw Exception('The OTP is incorrect. Please try again.');
+      } else {
+        throw Exception('Verification failed: ${e.message}');
+      }
+    }
+  }
 }

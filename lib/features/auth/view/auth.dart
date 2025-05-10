@@ -5,6 +5,7 @@ import 'package:whatsapp_clone/core/theme/app_color.dart';
 import 'package:whatsapp_clone/core/widgets/custom_widgets/custom_button.dart';
 import 'package:whatsapp_clone/core/widgets/dialogs/dialog_utils.dart';
 import 'package:whatsapp_clone/features/auth/bloc/auth_bloc.dart';
+import 'package:whatsapp_clone/features/auth/view/otp_verification.dart';
 import 'package:whatsapp_clone/features/countryCodePage/view/country_code_page.dart';
 
 class AuthPage extends StatefulWidget {
@@ -74,15 +75,23 @@ class _AuthPageState extends State<AuthPage> {
             Navigator.pop(context);
             DialogUtils.showPhoneNumberExceedsLimitDialogBox(context);
           } else if (state is AuthFormValidation) {
-            Navigator.pop(context);
-            DialogUtils.showConfirmNumberDialogBox(
+            DialogUtils.showConfirmNumberDialogBox (
                 context,
               phoneNumber: phoneNumberController.text,
               countryCode: countryCodeController.text,
               onEditPressed: (){
                   Navigator.pop(context);
               },
-              onYesPressed: (){}
+                onYesPressed: () async {
+                  Navigator.pushReplacement(context, MaterialPageRoute(
+                      builder: (BuildContext context) => OtpVerificationPage(phoneNumber: state.phoneWithCountryCode,)));
+                  DialogUtils.showSendingCodeDialogBox(context);
+                  final phoneNumber = '+${countryCodeController.text} ${phoneNumberController.text}';
+                  context.read<AuthBloc>().add(SendOtp(phoneNumber));
+
+                  Navigator.pop(context);
+
+                }
             );
           }
 

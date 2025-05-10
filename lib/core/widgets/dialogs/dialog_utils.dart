@@ -200,6 +200,29 @@ class DialogUtils {
     );
   }
 
+  static void showSendingCodeDialogBox(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (_) => CustomShowDialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.zero,
+        ),
+        widget: Row(
+          children: [
+            const SizedBox(width: 25),
+            CircularProgressIndicator(color: AppColor.lightGreen),
+            const SizedBox(width: 25),
+            const Text(
+              'Sending code...',
+              style: TextStyle(fontSize: 17),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+
   static void showErrorDialogBox(BuildContext context, String message) {
     showDialog(
       context: context,
@@ -209,4 +232,109 @@ class DialogUtils {
     );
   }
 
+  static void showVerifyingDialogBox(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (_) =>
+          CustomShowDialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.zero,
+            ),
+            widget: Row(
+              children: [
+                const SizedBox(width: 25),
+                CircularProgressIndicator(color: AppColor.lightGreen),
+                const SizedBox(width: 25),
+                const Text(
+                  'Verifying...',
+                  style: TextStyle(fontSize: 17),
+                ),
+              ],
+            ),
+          ),
+    );
+  }
+
+  static void showIncorrectCodeDialogBox(BuildContext context) {
+    showDialog(
+        context: context,
+        builder: (_) =>
+            CustomShowDialog(
+                title: Text('The code you entered is incorrect. Please try again in 2 seconds.',
+                  style: TextStyle(
+                      fontSize: 17,
+                      color: AppColor.grey
+                  ),),
+                widget: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    CustomTextButton(
+                      text: 'OK',
+                      textColor: AppColor.green,
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+
+                    ),
+                  ],
+                )
+            )
+    );
+  }
+
+
+
+  static void showTryAgainDialogBox(BuildContext context,
+      { required String phoneNumber,
+        required String countryCode,
+        required VoidCallback onEditPressed,
+        required VoidCallback onYesPressed,
+      }) {
+    showDialog(
+        context: context,
+        builder: (_) =>
+            CustomShowDialog(
+              title: Text(
+                'Unable to connect. Please try again later.', style: TextStyle(
+                fontSize: 17,
+              ),
+              ),
+              dialogHeight: 90,
+              widget: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Text('+$countryCode $phoneNumber',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 25,
+
+                        ),
+                        textAlign: TextAlign.start,
+                      ),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      CustomTextButton(
+                          text: 'Edit',
+                          textColor: AppColor.green,
+                          onPressed: onEditPressed
+                      ),
+
+                      SizedBox(width: 15,),
+                      CustomTextButton(
+                        text: 'Yes',
+                        textColor: AppColor.green,
+                        onPressed: onYesPressed,
+                      ),
+                    ],
+                  )
+                ],
+              ),
+            )
+    );
+  }
 }

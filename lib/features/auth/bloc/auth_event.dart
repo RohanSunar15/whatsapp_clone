@@ -22,17 +22,7 @@ final class PhoneNumberChanged extends AuthEvent{
   final String phoneNumber;
 
   PhoneNumberChanged({required this.countryCode, required this.phoneNumber});
-
-
 }
-
-// //Change in Phone Number TextField
-// final class PhoneNumberChanged extends AuthEvent{
-//   final String phoneNumber;
-//
-//   PhoneNumberChanged({required this.phoneNumber,});
-// }
-
 
 //NextButton Clicked
 final class NextButtonClicked extends AuthEvent {
@@ -45,14 +35,26 @@ final class NextButtonClicked extends AuthEvent {
   });
 }
 
-// When next is clicked Sending otp is triggered
-final class SendOtp extends AuthEvent {}
+//Otp Verification event
+final class SendOtp extends AuthEvent {
+  final String phoneNumber;
+
+  SendOtp(this.phoneNumber);
+}
+
+
+
+//Otp is entered by user
+final class OtpChanged extends AuthEvent{
+  final String otp;
+
+  OtpChanged({required this.otp });
+}
 
 //Verifying OTP
-final class VerifyOtp extends AuthEvent {}
+final class VerifyOtp extends AuthEvent {
+  final String verificationId;
+  final String otp;
 
-// OTP has been Sent
-final class OtpSent extends AuthEvent {}
-
-//Any Error Occurs
-final class AuthError extends AuthEvent {}
+  VerifyOtp(this.verificationId, this.otp);
+}

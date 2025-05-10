@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:whatsapp_clone/core/theme/app_theme.dart';
+import 'package:whatsapp_clone/features/auth/repository/auth_repository.dart';
 import 'package:whatsapp_clone/features/auth/view/otp_verification.dart';
 import 'package:whatsapp_clone/features/splash/view/splash_screen.dart';
 import 'package:whatsapp_clone/features/auth/bloc/auth_bloc.dart';
@@ -11,7 +12,6 @@ import 'package:whatsapp_clone/firebase_options.dart';
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
-
   await Firebase.initializeApp();
 
   runApp(
@@ -19,7 +19,7 @@ void main() async{
     MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (_) => AuthBloc(),
+          create: (_) => AuthBloc(AuthRepository()),
           child: const MyApp(),
         ),
       ],
@@ -41,7 +41,7 @@ class MyApp extends StatelessWidget {
       darkTheme: darkTheme,
       debugShowCheckedModeBanner: false,
 
-      home: OtpVerificationPage(),
+      home: SplashScreen(),
     );
   }
 }
