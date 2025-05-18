@@ -1,5 +1,7 @@
 import 'dart:ui';
 
+import 'package:flutter/material.dart';
+
 
 class AppColor{
   static Color darkGreen  = Color(0xFF121212);
@@ -15,6 +17,10 @@ class AppColor{
   static Color grey = Color(0xFF585E65);
   static Color darkGrey = Color(0xFF43464C);
   static Color lightGrey  = Color(0xFFF5F5F5);
+  static Color searchBoxColor  = Color(0xFFF6F5F3);
+  static Color userBackgroundColor  = Color(0xFFB5B4BA);
+
+  static Color transparent = Colors.transparent;
 
 }
 

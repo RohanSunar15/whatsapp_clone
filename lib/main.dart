@@ -2,12 +2,10 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:whatsapp_clone/core/theme/app_theme.dart';
 import 'package:whatsapp_clone/features/auth/repository/auth_repository.dart';
-import 'package:whatsapp_clone/features/auth/view/otp_verification.dart';
 import 'package:whatsapp_clone/features/splash/view/splash_screen.dart';
 import 'package:whatsapp_clone/features/auth/bloc/auth_bloc.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:whatsapp_clone/firebase_options.dart';
 
 
 void main() async{
