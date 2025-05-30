@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:whatsapp_clone/core/theme/app_color.dart';
-import 'package:whatsapp_clone/features/chatList/bloc/chat_list_bloc.dart';
+import 'package:whatsapp_clone/data/chat_data.dart';
 import 'package:whatsapp_clone/features/chatList/widgets/chat_user_tile.dart';
 import 'package:whatsapp_clone/features/chatList/widgets/search_bar.dart';
 
@@ -42,9 +42,16 @@ class _ChatListState extends State<ChatList> {
         child: Column(
           children: [
             SearchBarWidget(),
-            ChatUserTileWidget(),
+            Expanded(
+              child: ListView.builder(
+                itemCount: chatList.length,
+                itemBuilder: (context, index) {
+                  return ChatUserTileWidget(chat: chatList[index]);
+                },
+              ),
+            ),
           ],
-        )
+        ),
       ),
     );
   }

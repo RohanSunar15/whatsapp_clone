@@ -27,6 +27,7 @@ void main() async{
   );
 }
 
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -39,7 +40,7 @@ class MyApp extends StatelessWidget {
       darkTheme: darkTheme,
       debugShowCheckedModeBanner: false,
 
-      home: SplashScreen(),
+      home: const SplashScreen(),
     );
   }
 }

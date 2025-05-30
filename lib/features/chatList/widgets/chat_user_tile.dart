@@ -1,70 +1,99 @@
 import 'package:flutter/material.dart';
 import 'package:whatsapp_clone/core/theme/app_color.dart';
+import 'package:whatsapp_clone/data/chat_data.dart';
 
-class ChatUserTileWidget extends StatefulWidget {
-  const ChatUserTileWidget({super.key});
+class ChatUserTileWidget extends StatelessWidget {
+  final ChatData chat;
 
-  @override
-  State<ChatUserTileWidget> createState() => _ChatUserTileWidgetState();
-}
+  const ChatUserTileWidget({super.key, required this.chat,});
 
-class _ChatUserTileWidgetState extends State<ChatUserTileWidget> {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      title: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      leading: Stack(
         children: [
-          Row(
-            children: [
-              CircleAvatar(
-                backgroundColor: AppColor.userBackgroundColor,
-                radius: 20,
-                child: Icon(Icons.person),
-              ),
-              SizedBox(width: 15),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'User 1',
-                    style: TextStyle(
-                      color: AppColor.black,
-                      fontSize: 12,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    textAlign: TextAlign.left,
-                  ),
-                  SizedBox(height: 10),
-                  Text(
-                    'User\'s message ',
-                    style: TextStyle(color: AppColor.black, fontSize: 12),
-                  ),
-                ],
-              ),
-            ],
+          CircleAvatar(
+            radius: 24,
+            backgroundColor: AppColor.userBackgroundColor,
+            backgroundImage: chat.profileImage != null
+                ? NetworkImage(chat.profileImage!)
+                : null,
+            child: chat.profileImage == null
+                ? Icon(Icons.person, size: 28, color: Colors.white)
+                : null,
           ),
-
-          Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Text(
-                'Yesterday',
-                style: TextStyle(fontSize: 11, color: AppColor.black,),
+          if (chat.isGroup)
+            Positioned(
+              bottom: 0,
+              right: 0,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: AppColor.lightGreen,
+                  shape: BoxShape.circle,
+                  border: Border.all(color: AppColor.grey, width: 2),
+                ),
+                padding: EdgeInsets.all(2),
+                child: Icon(Icons.group, size: 14, color: Colors.white),
               ),
-              SizedBox(height: 5,),
-              CircleAvatar(
-                backgroundColor: AppColor.lightGreen,
-                radius: 10,
-                child: Text('1', style: TextStyle(fontSize: 10)),
+            ),
+        ],
+      ),
+      title: Text(
+        chat.name,
+        style: TextStyle(
+          color: AppColor.black,
+          fontWeight: FontWeight.bold,
+          fontSize: 16,
+        ),
+      ),
+      subtitle: Row(
+        children: [
+          if (chat.isVoiceCall)
+            Icon(
+              chat.isMissedCall ? Icons.call_missed : Icons.call,
+              color: chat.isMissedCall ? Colors.red : Colors.green,
+              size: 16,
+            ),
+          if (chat.isVoiceCall) SizedBox(width: 4),
+          Expanded(
+            child: Text(
+              chat.message,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                color: AppColor.black,
+                fontSize: 14,
               ),
-            ],
+            ),
           ),
         ],
       ),
-      tileColor: AppColor.grey,
-      // selected: true,
+      trailing: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            chat.time,
+            style: TextStyle(
+              color: AppColor.black,
+              fontSize: 12,
+            ),
+          ),
+          SizedBox(height: 6),
+          if (chat.unreadCount > 0)
+            CircleAvatar(
+              radius: 12,
+              backgroundColor: AppColor.lightGreen,
+              child: Text(
+                chat.unreadCount.toString(),
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 12,
+                ),
+              ),
+            ),
+        ],
+      ),
+      onTap: () {
+      },
     );
   }
 }
