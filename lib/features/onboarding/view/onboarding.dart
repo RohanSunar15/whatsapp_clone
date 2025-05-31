@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:whatsapp_clone/core/widgets/custom_widgets/custom_popup_menu.dart';
+import 'package:whatsapp_clone/core/widgets/custom_widgets/custom_show_menu.dart';
 import 'package:whatsapp_clone/features/auth/view/auth.dart';
 import 'package:whatsapp_clone/features/onboarding/bloc/onboarding_bloc.dart';
 import 'package:whatsapp_clone/features/onboarding/bloc/onboarding_event.dart';
@@ -35,8 +36,24 @@ class _OnboardingState extends State<Onboarding> {
       actions: [
         Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Icon(Icons.more_vert_outlined),
-        ),
+          child: GestureDetector(
+            onTapDown: (details) {
+              showCustomMenu(
+                context: context,
+                position: details.globalPosition,
+                items: [
+                  CustomShowMenuItem(
+                    text: "Help",
+                    onTap: () => print("Help tapped"),
+                    textColor: AppColor.black, 
+                  ),
+                ],
+              );
+            },
+            child: Icon(Icons.more_vert),
+          ),
+        )
+
       ],
     ),
       body: BlocListener<OnboardingBloc, OnboardingState>(
