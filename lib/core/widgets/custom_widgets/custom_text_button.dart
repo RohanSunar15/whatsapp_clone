@@ -8,6 +8,9 @@ class CustomTextButton extends StatelessWidget {
   final VoidCallback? onHover;
   final double? fontSize;
   final FontWeight? fontWeight;
+  final Color? overlayColor;
+
+
 
   const CustomTextButton({
     super.key,
@@ -15,7 +18,9 @@ class CustomTextButton extends StatelessWidget {
     required this.text,
     this.textColor,
     this.fontSize,
-    this.fontWeight, this.onHover,
+    this.fontWeight,
+    this.onHover,
+    this.overlayColor,
   });
 
   @override
@@ -23,9 +28,9 @@ class CustomTextButton extends StatelessWidget {
     return TextButton(
       onPressed: onPressed,
       style: ButtonStyle(
-        overlayColor: WidgetStateProperty.all(Colors.transparent), // Remove ripple
-        splashFactory: NoSplash.splashFactory, // No splash effect
-        foregroundColor: WidgetStateProperty.all(textColor), // Text color
+        overlayColor: WidgetStateProperty.all(overlayColor ?? Colors.transparent),
+        splashFactory: NoSplash.splashFactory,
+        foregroundColor: WidgetStateProperty.all(textColor),
       ),
       child: Text(
         text,
