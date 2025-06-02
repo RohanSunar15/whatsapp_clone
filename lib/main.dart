@@ -2,6 +2,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:whatsapp_clone/core/theme/app_theme.dart';
 import 'package:whatsapp_clone/features/auth/repository/auth_repository.dart';
+import 'package:whatsapp_clone/features/profile/view/profile.dart';
+import 'package:whatsapp_clone/features/settings/view/settings.dart';
 import 'package:whatsapp_clone/features/splash/view/splash_screen.dart';
 import 'package:whatsapp_clone/features/auth/bloc/auth_bloc.dart';
 
@@ -39,8 +41,7 @@ class MyApp extends StatelessWidget {
       theme: lightTheme,
       darkTheme: darkTheme,
       debugShowCheckedModeBanner: false,
-
-      home: const SplashScreen(),
+      home: const SettingsScreen(),
     );
   }
 }
