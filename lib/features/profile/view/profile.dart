@@ -15,6 +15,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        scrolledUnderElevation: 0,
         leading: IconButton(icon: Icon(Icons.arrow_back), onPressed: () {}),
         title: Text(
           'Profile',
