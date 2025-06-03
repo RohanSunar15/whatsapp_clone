@@ -41,6 +41,7 @@ class _NameChangeScreenState extends State<NameChangeScreen> {
             TextFormField(
               controller: _nameController,
               maxLength: _maxLength,
+              cursorColor: AppColor.lightGreen,
               decoration: InputDecoration(
                 labelText: 'Your name',
                 labelStyle: TextStyle(color: AppColor.grey),
