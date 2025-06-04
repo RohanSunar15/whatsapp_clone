@@ -2,8 +2,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:whatsapp_clone/core/theme/app_theme.dart';
 import 'package:whatsapp_clone/features/auth/repository/auth_repository.dart';
-import 'package:whatsapp_clone/features/profile/view/name_change_screen.dart';
-import 'package:whatsapp_clone/features/settings/view/settings.dart';
 import 'package:whatsapp_clone/features/auth/bloc/auth_bloc.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
