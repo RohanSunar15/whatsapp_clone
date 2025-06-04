@@ -52,22 +52,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
             fontSize: 14,
             overlayColor: AppColor.lightGreen,
           ),
-          IconTextTile(
+          CustomIconTextTile(
             icon: Icons.person_2_outlined,
             title: 'Name',
             value: 'Rohan Sunar',
           ),
-          IconTextTile(
+          CustomIconTextTile(
             icon: Icons.info_outline,
             title: 'About',
             value: 'Busy',
           ),
-          IconTextTile(
+          CustomIconTextTile(
             icon: Icons.phone_outlined,
             title: 'Phone',
             value: '+91 98341 50718',
           ),
-          IconTextTile(
+          CustomIconTextTile(
             icon: Icons.link_sharp,
             title: 'Links',
             value: 'Add links',

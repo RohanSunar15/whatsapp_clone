@@ -83,53 +83,55 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ),
             ),
 
-            IconTextTile(
+            CustomIconTextTile(
               icon: Icons.key_rounded,
               title: 'Account',
               value: 'Security notifications, change number',
             ),
-            IconTextTile(
+            CustomIconTextTile(
               icon: Icons.lock_outline_rounded,
               title: 'Privacy',
               value: 'Block contacts, disappearing messages',
             ),
-            IconTextTile(
+            CustomIconTextTile(
               icon: Icons.person,
               title: 'Avatar',
               value: 'Create, edit, profile photo',
             ),
-            IconTextTile(
+            CustomIconTextTile(
               icon: Icons.account_box_outlined,
               title: 'Lists',
               value: 'Manage people and groups',
             ),
-            IconTextTile(
+            CustomIconTextTile(
               icon: Icons.message_outlined,
               title: 'Chats',
               value: 'Theme, wallpapers, chat history',
             ),
-            IconTextTile(
+            CustomIconTextTile(
               icon: Icons.notifications_outlined,
               title: 'Notifications',
               value: 'Message, group & call tones',
             ),
-            IconTextTile(
+            CustomIconTextTile(
               icon: Icons.data_usage_outlined,
               title: 'Storage and data',
               value: 'Network usage, auto-download',
             ),
-            IconTextTile(
+            CustomIconTextTile(
               icon: Icons.language,
               title: 'App Language',
               value: 'English (device\'s language)',
             ),
-            IconTextTile(
+            CustomIconTextTile(
               icon: Icons.help_outline_outlined,
               title: 'Help',
               value: 'Help centre, contact us, privacy policy',
             ),
-            IconTextTile(icon: Icons.group_outlined, title: 'Invite a friend'),
-            IconTextTile(icon: Icons.phone_android_sharp, title: 'App updates'),
+            CustomIconTextTile(
+                icon: Icons.group_outlined, title: 'Invite a friend'),
+            CustomIconTextTile(
+                icon: Icons.phone_android_sharp, title: 'App updates'),
 
             Padding(
               padding: const EdgeInsets.all(8.0),
@@ -146,13 +148,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ),
             ),
 
-            IconTextTile(
+            CustomIconTextTile(
               icon: FontAwesomeIcons.instagram,
               title: 'Open Instagram',
             ),
-            IconTextTile(icon: Icons.facebook_outlined, title: 'Open Facebook'),
-            IconTextTile(icon: FontAwesomeIcons.threads, title: 'Open Threads'),
-            IconTextTile(
+            CustomIconTextTile(
+                icon: Icons.facebook_outlined, title: 'Open Facebook'),
+            CustomIconTextTile(
+                icon: FontAwesomeIcons.threads, title: 'Open Threads'),
+            CustomIconTextTile(
               icon: Icons.circle_outlined,
               title: 'Open Meta AI app',
             ),
