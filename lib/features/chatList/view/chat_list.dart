@@ -13,11 +13,15 @@ class ChatList extends StatefulWidget {
 }
 
 class _ChatListState extends State<ChatList> {
+
+  int _selectedIndex = 1;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
+          scrolledUnderElevation: 0,
         title: Text('WhatsApp', style: TextStyle(
           color: AppColor.lightGreen,
           fontSize: 25,
@@ -88,6 +92,39 @@ class _ChatListState extends State<ChatList> {
           )
         ]
 
+      ),
+      floatingActionButton: Container(
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(
+                  Radius.circular(5)
+              ),
+              color: AppColor.lightGreen
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: Icon(Icons.chat),
+          )),
+
+      bottomNavigationBar: BottomNavigationBar(
+          currentIndex: _selectedIndex,
+          onTap: (int index) {
+            setState(() {
+              _selectedIndex = index;
+            });
+          },
+          selectedItemColor: Colors.green,
+          // color for selected item
+          unselectedItemColor: Colors.grey,
+          // color for unselected items
+          backgroundColor: Colors.black,
+          items: [
+            BottomNavigationBarItem(icon: Icon(Icons.chat), label: 'Chats'),
+            BottomNavigationBarItem(icon: Icon(Icons.update), label: 'Updates'),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.groups_outlined), label: 'Communities'),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.call_outlined), label: 'Calls'),
+          ]
       ),
       body: Center(
         child: Column(
