@@ -9,7 +9,7 @@ class AppColor{
   static Color lightGreen  = Color(0xFF25D366);
   static Color lightestYellow  = Color(0xFFDCF8C6);
   static Color cream  = Color(0xFFECE5DD);
-
+  static const Color lightModeBackgroundColor = Color(0xFFEFEFEF);
 
   static Color white = Color(0xFFFFFFFF);
   static Color black = Color(0xFF000000);

@@ -18,7 +18,9 @@ void main() async{
       providers: [
         BlocProvider(
           create: (_) => AuthBloc(AuthRepository()),
-          child: const MyApp(),
+        ),
+        BlocProvider<CustomBottomNavBarCubit>(
+          create: (_) => CustomBottomNavBarCubit(),
         ),
       ],
       child: const MyApp(),
