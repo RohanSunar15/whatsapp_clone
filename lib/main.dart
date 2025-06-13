@@ -19,6 +19,9 @@ void main() async{
         BlocProvider(
           create: (_) => AuthBloc(AuthRepository()),
         ),
+        BlocProvider(
+          create: (_) => ChatListBloc(),
+        ),
         BlocProvider<CustomBottomNavBarCubit>(
           create: (_) => CustomBottomNavBarCubit(),
         ),

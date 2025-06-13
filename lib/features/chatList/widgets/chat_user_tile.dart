@@ -4,8 +4,10 @@ import 'package:whatsapp_clone/data/chat_data.dart';
 
 class ChatUserTileWidget extends StatelessWidget {
   final ChatData chat;
+  final Function() onTap;
 
-  const ChatUserTileWidget({super.key, required this.chat,});
+  const ChatUserTileWidget(
+      {super.key, required this.chat, required this.onTap,});
 
   @override
   Widget build(BuildContext context) {
@@ -92,8 +94,7 @@ class ChatUserTileWidget extends StatelessWidget {
             ),
         ],
       ),
-      onTap: () {
-      },
+      onTap: onTap,
     );
   }
 }
