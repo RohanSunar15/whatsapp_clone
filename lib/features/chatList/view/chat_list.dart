@@ -8,7 +8,6 @@ import 'package:whatsapp_clone/features/chatList/bloc/chat_list_bloc.dart';
 import 'package:whatsapp_clone/features/chatList/widgets/chat_user_tile.dart';
 import 'package:whatsapp_clone/features/chatList/widgets/custom_bottom_nav_bar.dart';
 import 'package:whatsapp_clone/features/chatList/widgets/search_bar.dart';
-import 'package:whatsapp_clone/features/chatMessage/view/chat_message_page.dart';
 import 'package:whatsapp_clone/features/settings/view/settings.dart';
 
 class ChatList extends StatefulWidget {
@@ -130,7 +129,9 @@ class _ChatListState extends State<ChatList> {
                     itemBuilder: (context, index) {
                       return ChatUserTileWidget(
                         chat: chatList[index],
-                        onTap: () {},
+                        onTap: () {
+                          
+                        },
                       );
                     },
                   ),

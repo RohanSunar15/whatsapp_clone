@@ -134,7 +134,7 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
                                   OtpChanged(otp: value));
                               if (value.length == 6 && verificationId != null) {
                                 context.read<AuthBloc>().add(VerifyOtp(
-                                  verificationId!, value,
+                                  verificationId!, value, widget.phoneNumber!
                                 ));
                               }
                             },

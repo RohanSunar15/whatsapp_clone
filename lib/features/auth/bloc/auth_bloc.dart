@@ -149,8 +149,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   FutureOr<void> _verifyOtp(VerifyOtp event, Emitter<AuthState> emit) async{
     try{
-      emit(OtpVerificationLoading());
-      await _repository.verifyOTP(event.verificationId, event.otp);
+      await _repository.verifyOTP(event.verificationId, event.otp, event.phoneNumber);
       emit(AuthSuccess());
     } on FirebaseAuthException catch(e){
       if (e.code == 'invalid-verification-code') {
