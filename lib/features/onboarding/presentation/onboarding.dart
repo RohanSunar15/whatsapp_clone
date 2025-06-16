@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:whatsapp_clone/core/widgets/custom_widgets/custom_popup_menu.dart';
 import 'package:whatsapp_clone/core/widgets/custom_widgets/custom_show_menu.dart';
-import 'package:whatsapp_clone/features/auth/view/auth.dart';
-import 'package:whatsapp_clone/features/onboarding/bloc/onboarding_bloc.dart';
-import 'package:whatsapp_clone/features/onboarding/bloc/onboarding_event.dart';
-import 'package:whatsapp_clone/features/onboarding/bloc/onboarding_state.dart';
+import 'package:whatsapp_clone/features/auth/presentation/auth.dart';
+import 'package:whatsapp_clone/features/onboarding/presentation/bloc/onboarding_bloc.dart';
+import 'package:whatsapp_clone/features/onboarding/presentation/bloc/onboarding_event.dart';
+import 'package:whatsapp_clone/features/onboarding/presentation/bloc/onboarding_state.dart';
 
 import '../../../core/theme/app_color.dart';
 import '../language/view/language_screen.dart';

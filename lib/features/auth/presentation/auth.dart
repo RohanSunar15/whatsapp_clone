@@ -4,9 +4,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:whatsapp_clone/core/theme/app_color.dart';
 import 'package:whatsapp_clone/core/widgets/custom_widgets/custom_button.dart';
 import 'package:whatsapp_clone/core/widgets/dialogs/dialog_utils.dart';
-import 'package:whatsapp_clone/features/auth/bloc/auth_bloc.dart';
-import 'package:whatsapp_clone/features/auth/view/otp_verification.dart';
-import 'package:whatsapp_clone/features/countryCodePage/view/country_code_page.dart';
+import 'package:whatsapp_clone/features/auth/presentation//bloc/auth_bloc.dart';
+import 'package:whatsapp_clone/features/auth/presentation//otp_verification.dart';
+import 'package:whatsapp_clone/features/countryCodePage/presentation/country_code_page.dart';
 
 class AuthPage extends StatefulWidget {
   const AuthPage({super.key});

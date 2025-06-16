@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:whatsapp_clone/core/theme/app_color.dart';
-import 'package:whatsapp_clone/features/chatList/bloc/custom_bottom_nav_bar_cubit.dart';
+import 'package:whatsapp_clone/features/chatList/presentation/bloc/custom_bottom_nav_bar_cubit.dart';
 
 class CustomBottomNavBar extends StatelessWidget {
   const CustomBottomNavBar({super.key});

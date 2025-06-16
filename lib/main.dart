@@ -1,13 +1,13 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:whatsapp_clone/core/theme/app_theme.dart';
-import 'package:whatsapp_clone/features/auth/repository/auth_repository.dart';
-import 'package:whatsapp_clone/features/auth/bloc/auth_bloc.dart';
+import 'package:whatsapp_clone/features/auth/data/repositories/auth_repository.dart';
+import 'package:whatsapp_clone/features/auth/presentation/bloc/auth_bloc.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:whatsapp_clone/features/chatList/bloc/chat_list_bloc.dart';
-import 'package:whatsapp_clone/features/chatList/bloc/custom_bottom_nav_bar_cubit.dart';
-import 'package:whatsapp_clone/features/splash/view/splash_screen.dart';
+import 'package:whatsapp_clone/features/chatList/presentation/bloc/chat_list_bloc.dart';
+import 'package:whatsapp_clone/features/chatList/presentation/bloc/custom_bottom_nav_bar_cubit.dart';
+import 'package:whatsapp_clone/features/splash/presentation/splash_screen.dart';
 
 
 void main() async{

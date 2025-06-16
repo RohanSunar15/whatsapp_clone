@@ -4,11 +4,11 @@ import 'package:whatsapp_clone/core/theme/app_color.dart';
 import 'package:whatsapp_clone/core/widgets/common/app_navigator.dart';
 import 'package:whatsapp_clone/core/widgets/custom_widgets/custom_show_menu.dart';
 import 'package:whatsapp_clone/data/chat_data.dart';
-import 'package:whatsapp_clone/features/chatList/bloc/chat_list_bloc.dart';
+import 'package:whatsapp_clone/features/chatList/presentation/bloc/chat_list_bloc.dart';
 import 'package:whatsapp_clone/features/chatList/widgets/chat_user_tile.dart';
 import 'package:whatsapp_clone/features/chatList/widgets/custom_bottom_nav_bar.dart';
 import 'package:whatsapp_clone/features/chatList/widgets/search_bar.dart';
-import 'package:whatsapp_clone/features/settings/view/settings.dart';
+import 'package:whatsapp_clone/features/settings/presentation/settings.dart';
 
 class ChatList extends StatefulWidget {
   const ChatList({super.key});

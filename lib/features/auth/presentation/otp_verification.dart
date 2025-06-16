@@ -5,9 +5,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:whatsapp_clone/core/theme/app_color.dart';
 import 'package:whatsapp_clone/core/widgets/custom_widgets/custom_text_button.dart';
 import 'package:whatsapp_clone/core/widgets/dialogs/dialog_utils.dart';
-import 'package:whatsapp_clone/features/auth/bloc/auth_bloc.dart';
-import 'package:whatsapp_clone/features/auth/view/auth.dart';
-import 'package:whatsapp_clone/features/chatList/view/chat_list.dart';
+import 'package:whatsapp_clone/features/auth/presentation/auth.dart';
+import 'package:whatsapp_clone/features/auth/presentation/bloc/auth_bloc.dart';
+
+import 'package:whatsapp_clone/features/chatList/presentation/chat_list.dart';
 
 class OtpVerificationPage extends StatefulWidget {
   const OtpVerificationPage({super.key, required this.phoneNumber});

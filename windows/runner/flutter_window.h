@@ -8,10 +8,10 @@
 
 #include "win32_window.h"
 
-// A window that does nothing but host a Flutter view.
+// A window that does nothing but host a Flutter presentation.
 class FlutterWindow : public Win32Window {
  public:
-  // Creates a new FlutterWindow hosting a Flutter view running |project|.
+  // Creates a new FlutterWindow hosting a Flutter presentation running |project|.
   explicit FlutterWindow(const flutter::DartProject& project);
   virtual ~FlutterWindow();
 

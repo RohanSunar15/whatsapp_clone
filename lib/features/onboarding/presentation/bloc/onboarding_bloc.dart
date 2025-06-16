@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
-import 'package:whatsapp_clone/features/onboarding/bloc/onboarding_event.dart';
-import 'package:whatsapp_clone/features/onboarding/bloc/onboarding_state.dart';
+import 'package:whatsapp_clone/features/onboarding/presentation/bloc/onboarding_event.dart';
+import 'package:whatsapp_clone/features/onboarding/presentation/bloc/onboarding_state.dart';
 
 
 class OnboardingBloc extends Bloc<OnboardingEvent, OnboardingState> {
