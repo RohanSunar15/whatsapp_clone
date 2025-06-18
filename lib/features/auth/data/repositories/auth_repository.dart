@@ -45,11 +45,9 @@ class AuthRepository {
         final user = await fetchUserData(phoneNumber);
         return user;
       } else {
-        print('Backend token verification failed');
         return null;
       }
     } catch (e) {
-      print('Error verifying OTP: $e');
       return null;
     }
   }
