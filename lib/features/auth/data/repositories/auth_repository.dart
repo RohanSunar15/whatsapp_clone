@@ -53,48 +53,49 @@ class AuthRepository {
       return null;
     }
   }
-
   Future<bool> sendIdTokenToBackend(String idToken) async {
-    print(idToken);
-    final uri = 'http://10.0.2.2:8000/verify-token';
+    {
+      try {
+        final uri = 'http://10.0.2.2:8000/verify-token';
+        final response = await http.post(
+          Uri.parse(uri),
+          headers: {'Content-Type': 'application/json'},
+          body: jsonEncode({'token': idToken}),
+        );
 
-    final response = await http.post(
-      Uri.parse(uri),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: jsonEncode({'token': idToken}),
-    );
-    return response.statusCode == 200;
+        if (response.statusCode == 200) {
+          return true;
+        } else {
+          return false;
+        }
+      } catch (e) {
+        return false;
+      }
+    }
   }
 
-
-  Future<UserModel?> fetchUserData(String phoneNumber,) async {
+  Future<UserModel?> fetchUserData(String phoneNumber) async {
     String formattedNumber = phoneNumber.replaceAll(' ', '');
 
     final uri = 'http://10.0.2.2:8000/user/$formattedNumber';
 
-    print(uri);
-    try{
+    try {
       final response = await http.get(Uri.parse(uri));
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
-        print(data);
         return UserModel.fromJson(data);
       } else if (response.statusCode == 404) {
-        print('User not found');
         return null;
       } else {
-        print('Failed to fetch user: ${response.statusCode}');
         return null;
       }
-    } catch(e) {
-      print('Error fetching user: $e');
+    } catch (e) {
       return null;
     }
-
   }
 
   User? get currentUser => _auth.currentUser;
 }
+
+

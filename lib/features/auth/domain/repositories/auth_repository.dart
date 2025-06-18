@@ -1,0 +1,22 @@
+import 'package:whatsapp_clone/features/auth/domain/entities/user.entity.dart';
+
+abstract class AuthRepository {
+  Future<void> verifyPhone(
+    String phoneNumber,
+    Function(String) onCodeSent,
+    Function(String) onAutoVerified,
+    Function(String) onFailed,
+  );
+
+  Future<UserEntity?> verifyOTP(
+    String verificationId,
+    String otp,
+    String phoneNumber,
+  );
+
+  Future<UserEntity?> fetchUserData(String phoneNumber);
+
+  Future<bool> sendIdTokenToBackend(String idToken);
+
+  bool get isLoggedIn;
+}

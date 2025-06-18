@@ -52,9 +52,10 @@ class _AuthPageState extends State<AuthPage> {
         ],
       ),
       body: BlocConsumer<AuthBloc, AuthState>(
-        listener: (context, state) {
+        listener: (context, state) async {
           if (state is PhoneAuthLoading) {
             DialogUtils.showConnectingDialogBox(context);
+            Future.delayed(Duration(seconds: 3));
           } else if (state is AuthCountrySelected) {
             countryCodeController.text = state.countryCode;
             selectedCountryName = state.countryName;
@@ -69,32 +70,43 @@ class _AuthPageState extends State<AuthPage> {
                   offset: state.formattedPhoneNumber.length),
             );
           } else if (state is PhoneNumberUnderLimit) {
-            Navigator.pop(context);
+            if (Navigator.canPop(context)) Navigator.pop(context);
             DialogUtils.showPhoneNumberUnderLimitDialogBox(context);
           } else if (state is PhoneNumberExceedsLimit) {
-            Navigator.pop(context);
+            if (Navigator.canPop(context)) Navigator.pop(context);
             DialogUtils.showPhoneNumberExceedsLimitDialogBox(context);
+          } else if (state is BackToAuthScreen) {
+            int count = 0;
+            while (Navigator.canPop(context) && count < 2) {
+              Navigator.pop(context);
+              count++;
+            }
+          } else if (state is NavigateToOtpVerificationScreen) {
+            if (Navigator.canPop(context)) Navigator.pop(context);
+            Navigator.pushReplacement(context, MaterialPageRoute(
+                builder: (BuildContext context) =>
+                    OtpVerificationPage(
+                      phoneNumber: state.phoneWithCountryCode,)));
+          } else if (state is OtpSendingLoading) {
+            DialogUtils.showSendingCodeDialogBox(context);
+            await Future.delayed(Duration(seconds: 2));
+            Navigator.pop(context);
           } else if (state is AuthFormValidation) {
-            DialogUtils.showConfirmNumberDialogBox (
+            DialogUtils.showConfirmNumberDialogBox(
                 context,
-              phoneNumber: phoneNumberController.text,
-              countryCode: countryCodeController.text,
-              onEditPressed: (){
-                  Navigator.pop(context);
-              },
+                phoneNumber: phoneNumberController.text,
+                countryCode: countryCodeController.text,
+                onEditPressed: () {
+                  context.read<AuthBloc>().add(EditButtonClicked());
+                },
                 onYesPressed: () async {
-                  Navigator.pushReplacement(context, MaterialPageRoute(
-                      builder: (BuildContext context) => OtpVerificationPage(phoneNumber: state.phoneWithCountryCode,)));
-                  DialogUtils.showSendingCodeDialogBox(context);
-                  final phoneNumber = '+${countryCodeController.text} ${phoneNumberController.text}';
+                  final phoneNumber = '+${countryCodeController
+                      .text} ${phoneNumberController.text}';
+                  print('YES clicked, sending phone: $phoneNumber');
                   context.read<AuthBloc>().add(SendOtp(phoneNumber));
-
-                  Navigator.pop(context);
-
                 }
             );
           }
-
         },
         builder: (context, state) {
           return Container(
@@ -184,7 +196,7 @@ class _AuthPageState extends State<AuthPage> {
 
                   Row(
                     children: [
-                // Country Code TextField
+                      // Country Code TextField
                       SizedBox(
                         width: 100,
                         child: TextField(
@@ -285,7 +297,7 @@ class _AuthPageState extends State<AuthPage> {
 
                 ],
               ),
-          ),
+            ),
           );
         },
       ),

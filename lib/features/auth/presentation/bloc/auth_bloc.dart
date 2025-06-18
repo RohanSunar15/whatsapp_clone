@@ -16,6 +16,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<CountryCodeChanged>(_countryCodeChanged);
     on<PhoneNumberChanged>(_phoneNumberChanged);
     on<NextButtonClicked>(_nextButtonClicked);
+    on<EditButtonClicked>(_editButtonClicked);
     on<SendOtp>(_sendOtp);
     // otp screen
     on<OtpChanged>(_otpChanged);
@@ -102,27 +103,35 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     }
   }
 
+  FutureOr<void> _editButtonClicked(EditButtonClicked event,
+      Emitter<AuthState> emit) {
+    emit(BackToAuthScreen());
+  }
+
+
+  
 
   FutureOr<void> _sendOtp(SendOtp event, Emitter<AuthState> emit) async {
-    final completer = Completer<void>();
+    emit(NavigateToOtpVerificationScreen(
+        phoneWithCountryCode: event.phoneNumber));
+    emit(OtpSendingLoading());
 
-    _repository.verifyPhone(
+    await _repository.verifyPhone(
       event.phoneNumber,
-          (verificationId) {
-        emit(OtpSentState(verificationId));
-        completer.complete();
+          (verificationId) async {
+        if (!emit.isDone) emit(OtpSentState(verificationId));
+        print(
+            '========================================================================Otpsent');
       },
-          (_) {
-        emit(Authenticated());
-        completer.complete();
+          (message) async {
+        if (!emit.isDone) emit(Authenticated());
+        print(
+            '========================================================================Authenticated');
       },
-          (error) {
-        emit(AuthFailure(message: error));
-        completer.complete();
+          (error) async {
+        if (!emit.isDone) emit(AuthFailure(message: error));
       },
     );
-
-    await completer.future;
   }
 
 
@@ -160,4 +169,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       }
     }
   }
+
+
 }

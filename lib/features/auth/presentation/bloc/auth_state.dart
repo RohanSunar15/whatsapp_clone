@@ -54,6 +54,17 @@ final class OtpUpdated extends AuthState{
 
 }
 
+final class BackToAuthScreen extends AuthState {}
+
+final class NavigateToOtpVerificationScreen extends AuthState {
+  final String phoneWithCountryCode;
+
+  NavigateToOtpVerificationScreen({required this.phoneWithCountryCode});
+}
+
+final class OtpSendingLoading extends AuthState {}
+
+
 class OtpSentState extends AuthState {
   final String verificationId;
 

@@ -1,28 +1,25 @@
-class UserModel {
-  final String id;
-  final String name;
-  final String phone;
-  final String profileImage;
-  final DateTime createdAt;
-  final DateTime updatedAt;
+import 'package:whatsapp_clone/features/auth/domain/entities/user.entity.dart';
 
+class UserModel extends UserEntity {
   UserModel({
-    required this.id,
-    required this.name,
-    required this.phone,
-    required this.profileImage,
-    required this.createdAt,
-    required this.updatedAt,
+    required super.uid,
+    required super.phoneNumber,
+    super.name,
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
-      id: json['_id'],
+      uid: json['uid'],
+      phoneNumber: json['phone'],
       name: json['name'],
-      phone: json['phone'],
-      profileImage: json['profileImage'],
-      createdAt: DateTime.parse(json['createdAt']),
-      updatedAt: DateTime.parse(json['updatedAt']),
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'uid': uid,
+      'phone': phoneNumber,
+      'name': name,
+    };
   }
 }

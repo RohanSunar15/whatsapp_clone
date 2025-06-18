@@ -203,6 +203,7 @@ class DialogUtils {
   static void showSendingCodeDialogBox(BuildContext context) {
     showDialog(
       context: context,
+      barrierDismissible: false,
       builder: (_) => CustomShowDialog(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.zero,

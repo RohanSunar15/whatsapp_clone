@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:whatsapp_clone/core/theme/app_color.dart';
 
 class CustomTextButton extends StatelessWidget {
   final String text;

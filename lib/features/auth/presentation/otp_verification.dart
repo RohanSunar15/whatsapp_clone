@@ -7,7 +7,6 @@ import 'package:whatsapp_clone/core/widgets/custom_widgets/custom_text_button.da
 import 'package:whatsapp_clone/core/widgets/dialogs/dialog_utils.dart';
 import 'package:whatsapp_clone/features/auth/presentation/auth.dart';
 import 'package:whatsapp_clone/features/auth/presentation/bloc/auth_bloc.dart';
-
 import 'package:whatsapp_clone/features/chatList/presentation/chat_list.dart';
 
 class OtpVerificationPage extends StatefulWidget {
@@ -51,28 +50,32 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
       ),
       body: BlocConsumer<AuthBloc, AuthState>(
         listener: (context, state) async {
-          if (state is Authenticated) {
-            Navigator.pop(context);
-          }
-          else if (state is OtpUpdated) {
+          if (state is OtpSentState) {
+            setState(() {
+              verificationId = state.verificationId;
+            });
+            if (Navigator.of(context,).canPop()) {
+              Navigator.of(context,).pop();
+            }
+          } else if (state is OtpUpdated) {
             otpController.value = TextEditingValue(
               text: state.otp,
               selection: TextSelection.collapsed(offset: state.cursorPosition),
             );
-          } else if (state is OtpVerificationLoading) {
+          }
+          else if (state is OtpVerificationLoading) {
             DialogUtils.showVerifyingDialogBox(context);
             await Future.delayed(Duration(seconds: 2));
-          } else if (state is OtpVerificationFailure) {
+          }
+          else if (state is OtpVerificationFailure) {
             DialogUtils.showIncorrectCodeDialogBox(context);
             await Future.delayed(Duration(seconds: 2));
-          } else if (state is AuthFailure) {
+          }
+          else if (state is AuthFailure) {
             DialogUtils.showIncorrectCodeDialogBox(context);
-          } else if (state is AuthSuccess) {
+          }
+          else if (state is AuthSuccess) {
             Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => ChatList() ));
-          } else if (state is OtpSentState) {
-            setState(() {
-              verificationId = state.verificationId;
-            });
           }
         },
         builder: (context, state) {

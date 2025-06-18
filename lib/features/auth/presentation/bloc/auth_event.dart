@@ -35,6 +35,9 @@ final class NextButtonClicked extends AuthEvent {
   });
 }
 
+//
+final class EditButtonClicked extends AuthEvent {}
+
 //Otp Verification event
 final class SendOtp extends AuthEvent {
   final String phoneNumber;
