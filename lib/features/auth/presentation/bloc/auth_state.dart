@@ -72,7 +72,6 @@ class OtpSentState extends AuthState {
 }
 
 
-final class OtpVerificationLoading extends AuthState{}
 
 final class OtpVerificationFailure extends AuthState{}
 

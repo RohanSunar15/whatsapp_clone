@@ -1,4 +1,4 @@
-import 'package:whatsapp_clone/features/auth/data/repositories/auth_repository.dart';
+import 'package:whatsapp_clone/features/auth/domain/repositories/auth_repository.dart';
 
 class SendTokenUseCase {
   final AuthRepository repository;

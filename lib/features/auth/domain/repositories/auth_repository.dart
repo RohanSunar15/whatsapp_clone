@@ -14,9 +14,9 @@ abstract class AuthRepository {
     String phoneNumber,
   );
 
-  Future<UserEntity?> fetchUserData(String phoneNumber);
-
   Future<bool> sendIdTokenToBackend(String idToken);
+
+  Future<UserEntity?> fetchUserData(String phoneNumber);
 
   bool get isLoggedIn;
 }

@@ -1,5 +1,5 @@
-import 'package:whatsapp_clone/features/auth/data/repositories/auth_repository.dart';
 import 'package:whatsapp_clone/features/auth/domain/entities/user.entity.dart';
+import 'package:whatsapp_clone/features/auth/domain/repositories/auth_repository.dart';
 
 class VerifyOtpUseCase {
   final AuthRepository repository;

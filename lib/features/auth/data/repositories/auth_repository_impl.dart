@@ -3,10 +3,13 @@ import 'dart:convert';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:http/http.dart' as http;
 import 'package:whatsapp_clone/features/auth/data/model/user_model.dart';
+import 'package:whatsapp_clone/features/auth/domain/entities/user.entity.dart';
+import 'package:whatsapp_clone/features/auth/domain/repositories/auth_repository.dart';
 
-class AuthRepository {
+class AuthRepositoryImpl implements AuthRepository {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
+  @override
   Future<void> verifyPhone(String phoneNumber,
       Function(String) onCodeSent,
       Function(String) onAutoVerified,
@@ -20,15 +23,15 @@ class AuthRepository {
         verificationFailed: (FirebaseAuthException e){
         onFailed(e.message ?? "Verification Failed");
         },
-        codeSent: (String verificationId, int? resendToken){
-        onCodeSent(verificationId);
+        codeSent: (String verificationId, int? resendToken) async {
+          await onCodeSent(verificationId);
         },
         codeAutoRetrievalTimeout: (String verificationId){
     });
   }
 
-
-  Future<UserModel?> verifyOTP(String verificationId, String otp,
+  @override
+  Future<UserEntity?> verifyOTP(String verificationId, String otp,
       String phoneNumber,) async {
     try {
       final credential = PhoneAuthProvider.credential(
@@ -51,6 +54,8 @@ class AuthRepository {
       return null;
     }
   }
+
+  @override
   Future<bool> sendIdTokenToBackend(String idToken) async {
     {
       try {
@@ -72,7 +77,8 @@ class AuthRepository {
     }
   }
 
-  Future<UserModel?> fetchUserData(String phoneNumber) async {
+  @override
+  Future<UserEntity?> fetchUserData(String phoneNumber) async {
     String formattedNumber = phoneNumber.replaceAll(' ', '');
 
     final uri = 'http://10.0.2.2:8000/user/$formattedNumber';
@@ -93,7 +99,8 @@ class AuthRepository {
     }
   }
 
-  User? get currentUser => _auth.currentUser;
+  @override
+  bool get isLoggedIn => _auth.currentUser != null;
 }
 
 

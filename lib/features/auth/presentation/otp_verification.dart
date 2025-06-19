@@ -22,7 +22,7 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
   final TextEditingController otpController = TextEditingController(
       text: '___ ___'
   );
-  String? verificationId;
+  String? currentVerificationId;
 
   @override
   void initState() {
@@ -38,49 +38,48 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        actions: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Icon(Icons.more_vert_outlined),
+    return BlocConsumer<AuthBloc, AuthState>(
+      listener: (context, state) async {
+        if (state is OtpUpdated) {
+          otpController.value = TextEditingValue(
+            text: state.otp,
+            selection: TextSelection.collapsed(
+                offset: state.cursorPosition),
+          );
+        }
+        else if (state is OtpSentState) {
+          currentVerificationId = state.verificationId;
+        }
+        else if (state is OtpVerifying) {
+          DialogUtils.showVerifyingDialogBox(context);
+          await Future.delayed(Duration(seconds: 2));
+        }
+        else if (state is OtpVerificationFailure) {
+          DialogUtils.showIncorrectCodeDialogBox(context);
+          await Future.delayed(Duration(seconds: 2));
+        }
+        else if (state is AuthFailure) {
+          DialogUtils.showIncorrectCodeDialogBox(context);
+        }
+        else if (state is AuthSuccess) {
+          Navigator.pushReplacement(context, MaterialPageRoute(
+              builder: (BuildContext context) => ChatList()));
+        }
+      },
+      builder: (context, state) {
+        return Scaffold(
+          appBar: AppBar(
+            automaticallyImplyLeading: false,
+            actions: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Icon(Icons.more_vert_outlined),
+              ),
+            ],
           ),
-        ],
-      ),
-      body: BlocConsumer<AuthBloc, AuthState>(
-        listener: (context, state) async {
-          if (state is OtpSentState) {
-            setState(() {
-              verificationId = state.verificationId;
-            });
-            if (Navigator.of(context,).canPop()) {
-              Navigator.of(context,).pop();
-            }
-          } else if (state is OtpUpdated) {
-            otpController.value = TextEditingValue(
-              text: state.otp,
-              selection: TextSelection.collapsed(offset: state.cursorPosition),
-            );
-          }
-          else if (state is OtpVerificationLoading) {
-            DialogUtils.showVerifyingDialogBox(context);
-            await Future.delayed(Duration(seconds: 2));
-          }
-          else if (state is OtpVerificationFailure) {
-            DialogUtils.showIncorrectCodeDialogBox(context);
-            await Future.delayed(Duration(seconds: 2));
-          }
-          else if (state is AuthFailure) {
-            DialogUtils.showIncorrectCodeDialogBox(context);
-          }
-          else if (state is AuthSuccess) {
-            Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => ChatList() ));
-          }
-        },
-        builder: (context, state) {
-          return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 0),
+          body: Padding(
+            padding: const EdgeInsets.symmetric(
+                horizontal: 30.0, vertical: 0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
@@ -118,7 +117,8 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
                           ..onTap = () {
                             Navigator.pushReplacement(
                               context,
-                              MaterialPageRoute(builder: (context) => AuthPage()), // Replace with your screen
+                              MaterialPageRoute(builder: (context) =>
+                                  AuthPage()), // Replace with your screen
                             );
                           },
                       ),
@@ -136,11 +136,15 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
                             onChanged: (value) {
                               context.read<AuthBloc>().add(
                                   OtpChanged(otp: value));
-                              if (value.length == 6 && verificationId != null) {
+
+                              if (value.length == 6) {
                                 context.read<AuthBloc>().add(VerifyOtp(
-                                  verificationId!, value, widget.phoneNumber!
+                                  otp: value,
+                                  phoneNumber: widget.phoneNumber!,
+                                  verificationId: '',
                                 ));
                               }
+
                             },
                             style: TextStyle(
                               fontSize: 24,
@@ -188,9 +192,9 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
 
               ],
             ),
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 

@@ -102,7 +102,6 @@ class _AuthPageState extends State<AuthPage> {
                 onYesPressed: () async {
                   final phoneNumber = '+${countryCodeController
                       .text} ${phoneNumberController.text}';
-                  print('YES clicked, sending phone: $phoneNumber');
                   context.read<AuthBloc>().add(SendOtp(phoneNumber));
                 }
             );

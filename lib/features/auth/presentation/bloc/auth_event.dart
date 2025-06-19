@@ -60,5 +60,6 @@ final class VerifyOtp extends AuthEvent {
   final String otp;
   final String phoneNumber;
 
-  VerifyOtp(this.verificationId, this.otp, this.phoneNumber);
+  VerifyOtp(
+      {required this.verificationId, required this.otp, required this.phoneNumber});
 }

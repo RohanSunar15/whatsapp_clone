@@ -1,17 +1,20 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:whatsapp_clone/features/auth/data/repositories/auth_repository.dart';
+import 'package:whatsapp_clone/features/auth/domain/repositories/auth_repository.dart';
 import 'package:whatsapp_clone/features/countryCodePage/local_repository/country_code_data.dart';
 
 part 'auth_event.dart';
 part 'auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
-  final AuthRepository _repository;
+  final AuthRepository repository;
+  String? _currentVerificationId;
 
-  AuthBloc(this._repository) : super(AuthInitial()) {
+  String? get currentVerificationId => _currentVerificationId;
+
+
+  AuthBloc(this.repository) : super(AuthInitial()) {
     on<CountrySelected>(_countrySelected);
     on<CountryCodeChanged>(_countryCodeChanged);
     on<PhoneNumberChanged>(_phoneNumberChanged);
@@ -109,24 +112,21 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   }
 
 
-  
-
+//
   FutureOr<void> _sendOtp(SendOtp event, Emitter<AuthState> emit) async {
     emit(NavigateToOtpVerificationScreen(
         phoneWithCountryCode: event.phoneNumber));
     emit(OtpSendingLoading());
 
-    await _repository.verifyPhone(
+
+    await repository.verifyPhone(
       event.phoneNumber,
           (verificationId) async {
-        if (!emit.isDone) emit(OtpSentState(verificationId));
-        print(
-            '========================================================================Otpsent');
+            _currentVerificationId = verificationId;
+            if (!emit.isDone) emit(OtpSentState(verificationId));
       },
           (message) async {
         if (!emit.isDone) emit(Authenticated());
-        print(
-            '========================================================================Authenticated');
       },
           (error) async {
         if (!emit.isDone) emit(AuthFailure(message: error));
@@ -150,25 +150,27 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
     int cursor = rawOtp.length;
     if (cursor > 3) cursor += 1;
-
     emit(OtpUpdated(otp: formatted, cursorPosition: cursor));
+    if (rawOtp.length == 6) {
+      emit(OtpVerifying());
+    }
   }
 
 
 
   FutureOr<void> _verifyOtp(VerifyOtp event, Emitter<AuthState> emit) async{
-    try{
-      await _repository.verifyOTP(event.verificationId, event.otp, event.phoneNumber);
-      emit(AuthSuccess());
-    } on FirebaseAuthException catch(e){
-      if (e.code == 'invalid-verification-code') {
-        emit(OtpVerificationFailure());
-        throw Exception('The OTP is incorrect. Please try again.');
-      } else {
-        throw Exception('Verification failed: ${e.message}');
-      }
+    if (_currentVerificationId == null) {
+      emit(AuthFailure(message: "Verification ID missing"));
+      return;
     }
-  }
 
+    try {
+      await repository.verifyOTP(
+          _currentVerificationId!, event.otp, event.phoneNumber);
+      emit(AuthSuccess());
+    } catch (e) {
+        emit(OtpVerificationFailure());
+      }
+  }
 
 }
