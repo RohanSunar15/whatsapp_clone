@@ -9,7 +9,6 @@ import 'package:whatsapp_clone/features/auth/domain/repositories/auth_repository
 class AuthRepositoryImpl implements AuthRepository {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-
   @override
   Future<void> verifyPhone(String phoneNumber,
       Function(String) onCodeSent,
@@ -84,7 +83,6 @@ class AuthRepositoryImpl implements AuthRepository {
 
     final idToken = await FirebaseAuth.instance.currentUser?.getIdToken();
     if (idToken == null) return null;
-    print(idToken);
 
     String formattedNumber = phoneNumber.replaceAll(' ', '');
     final uri = 'http://10.0.2.2:8000/user/$formattedNumber';
@@ -96,10 +94,9 @@ class AuthRepositoryImpl implements AuthRepository {
             'Content-Type': 'application/json',
             'Authorization': 'Bearer $idToken',
           });
-      print(response.statusCode);
+
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
-        print(data);
         return UserModel.fromJson(data);
       } else if (response.statusCode == 404) {
         return null;
