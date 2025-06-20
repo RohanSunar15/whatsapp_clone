@@ -9,6 +9,7 @@ import 'package:whatsapp_clone/features/auth/domain/repositories/auth_repository
 class AuthRepositoryImpl implements AuthRepository {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
+
   @override
   Future<void> verifyPhone(String phoneNumber,
       Function(String) onCodeSent,
@@ -42,21 +43,17 @@ class AuthRepositoryImpl implements AuthRepository {
       await _auth.signInWithCredential(credential);
       final idToken = await _auth.currentUser!.getIdToken();
 
-      final success = await sendIdTokenToBackend(idToken!);
+      await sendIdTokenToBackend(idToken!);
 
-      if (success) {
-        final user = await fetchUserData(phoneNumber);
-        return user;
-      } else {
-        return null;
-      }
     } catch (e) {
       return null;
     }
+    return null;
   }
 
   @override
-  Future<bool> sendIdTokenToBackend(String idToken) async {
+  Future<UserEntity?> sendIdTokenToBackend(String idToken) async {
+
     {
       try {
         final uri = 'http://10.0.2.2:8000/verify-token';
@@ -67,27 +64,42 @@ class AuthRepositoryImpl implements AuthRepository {
         );
 
         if (response.statusCode == 200) {
-          return true;
+          final data = jsonDecode(response.body);
+          final phoneNumber = data['phone'];
+          final user = await fetchUserData(phoneNumber);
+          return user;
         } else {
-          return false;
+          return null;
         }
       } catch (e) {
-        return false;
+        rethrow;
       }
     }
   }
 
   @override
   Future<UserEntity?> fetchUserData(String phoneNumber) async {
-    String formattedNumber = phoneNumber.replaceAll(' ', '');
+    final user = _auth.currentUser;
+    if (user == null) return null;
 
+    final idToken = await FirebaseAuth.instance.currentUser?.getIdToken();
+    if (idToken == null) return null;
+    print(idToken);
+
+    String formattedNumber = phoneNumber.replaceAll(' ', '');
     final uri = 'http://10.0.2.2:8000/user/$formattedNumber';
 
     try {
-      final response = await http.get(Uri.parse(uri));
-
+      final response = await http.get(
+          Uri.parse(uri),
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer $idToken',
+          });
+      print(response.statusCode);
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
+        print(data);
         return UserModel.fromJson(data);
       } else if (response.statusCode == 404) {
         return null;

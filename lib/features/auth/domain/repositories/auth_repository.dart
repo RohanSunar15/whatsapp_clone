@@ -14,7 +14,7 @@ abstract class AuthRepository {
     String phoneNumber,
   );
 
-  Future<bool> sendIdTokenToBackend(String idToken);
+  Future<UserEntity?> sendIdTokenToBackend(String idToken);
 
   Future<UserEntity?> fetchUserData(String phoneNumber);
 
