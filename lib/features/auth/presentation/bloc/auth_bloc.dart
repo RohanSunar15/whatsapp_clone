@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:whatsapp_clone/features/auth/domain/repositories/auth_repository.dart';
-import 'package:whatsapp_clone/features/countryCodePage/local_repository/country_code_data.dart';
+import 'package:whatsapp_clone/features/auth/presentation/countryCodePage/local_repository/country_code_data.dart';
 
 part 'auth_event.dart';
 part 'auth_state.dart';
