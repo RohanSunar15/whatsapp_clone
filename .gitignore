@@ -47,3 +47,5 @@ app.*.map.json
 
 # Firebase config (optional, especially for public repos)
 android/app/google-services.json
+
+.env
