@@ -1,4 +1,4 @@
-import 'package:whatsapp_clone/features/auth/domain/entities/user.entity.dart';
+import 'package:whatsapp_clone/features/auth/domain/entities/user_entity.dart';
 
 abstract class AuthRepository {
   Future<void> verifyPhone(
