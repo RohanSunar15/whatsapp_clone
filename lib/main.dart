@@ -1,40 +1,32 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:whatsapp_clone/core/theme/app_theme.dart';
 import 'package:whatsapp_clone/features/auth/data/repositories/auth_repository_impl.dart';
 import 'package:whatsapp_clone/features/auth/presentation/bloc/auth_bloc.dart';
-
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:whatsapp_clone/features/chatList/presentation/bloc/chat_list_bloc.dart';
 import 'package:whatsapp_clone/features/chatList/presentation/bloc/custom_bottom_nav_bar_cubit.dart';
 import 'package:whatsapp_clone/features/splash/presentation/splash_screen.dart';
 
-
-void main() async{
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await dotenv.load(fileName: ".env");
   await Firebase.initializeApp();
 
-
   runApp(
-
     MultiBlocProvider(
       providers: [
-        BlocProvider(
-          create: (_) => AuthBloc(AuthRepositoryImpl()),
-        ),
-        BlocProvider(
-          create: (_) => ChatListBloc(),
-        ),
+        BlocProvider(create: (_) => AuthBloc(AuthRepositoryImpl())),
+        BlocProvider(create: (_) => ChatListBloc()),
         BlocProvider<CustomBottomNavBarCubit>(
           create: (_) => CustomBottomNavBarCubit(),
         ),
       ],
       child: const MyApp(),
     ),
-
   );
 }
-
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
