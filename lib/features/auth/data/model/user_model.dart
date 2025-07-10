@@ -1,17 +1,26 @@
 import 'package:whatsapp_clone/features/auth/domain/entities/user_entity.dart';
 
 class UserModel extends UserEntity {
-  UserModel({required super.uid, required super.phoneNumber, super.name});
+  UserModel({
+    required super.mongoId,
+    required super.uid,
+    required super.phoneNumber,
+  });
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
+      mongoId: json['mongoId'],
       uid: json['uid'],
       phoneNumber: json['phone'],
-      name: json['name'],
     );
   }
 
   Map<String, dynamic> toJson() {
-    return {'uid': uid, 'phone': phoneNumber, 'name': name};
+    return {'mongoId': mongoId, 'uid': uid, 'phone': phoneNumber};
+  }
+
+  @override
+  String toString() {
+    return 'UserModel(mongoId: $mongoId, uid: $uid, phoneNumber: $phoneNumber)';
   }
 }

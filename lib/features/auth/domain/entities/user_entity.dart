@@ -1,7 +1,11 @@
 class UserEntity {
+  final String mongoId;
   final String uid;
   final String phoneNumber;
-  final String? name;
 
-  UserEntity({required this.uid, required this.phoneNumber, this.name});
+  UserEntity({
+    required this.mongoId,
+    required this.uid,
+    required this.phoneNumber,
+  });
 }

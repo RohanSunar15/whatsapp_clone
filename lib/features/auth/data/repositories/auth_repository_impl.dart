@@ -5,9 +5,13 @@ import 'package:http/http.dart' as http;
 import 'package:whatsapp_clone/features/auth/data/model/user_model.dart';
 import 'package:whatsapp_clone/features/auth/domain/entities/user_entity.dart';
 import 'package:whatsapp_clone/features/auth/domain/repositories/auth_repository.dart';
+import 'package:whatsapp_clone/features/chatList/data/repositories/chatlist_respository_impl.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final chatListRepo = ChatListRepositoryImpl();
+
+  AuthRepositoryImpl();
 
   @override
   Future<void> verifyPhone(
@@ -46,7 +50,6 @@ class AuthRepositoryImpl implements AuthRepository {
 
       await _auth.signInWithCredential(credential);
       final idToken = await _auth.currentUser!.getIdToken();
-      print(idToken);
 
       await sendIdTokenToBackend(idToken!);
     } catch (e) {
@@ -57,64 +60,60 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   Future<UserEntity?> sendIdTokenToBackend(String idToken) async {
-    {
-      try {
-        final uri = 'http://10.0.2.2:8000/verify-token';
-        final response = await http.post(
-          Uri.parse(uri),
-          headers: {'Content-Type': 'application/json'},
-          body: jsonEncode({'token': idToken}),
-        );
-
-        if (response.statusCode == 200) {
-          final data = jsonDecode(response.body);
-          final phoneNumber = data['phone'];
-          final user = await fetchUserData(phoneNumber);
-          return user;
-        } else {
-          return null;
-        }
-      } catch (e) {
-        rethrow;
-      }
-    }
-  }
-
-  @override
-  Future<UserEntity?> fetchUserData(String phoneNumber) async {
-    final user = _auth.currentUser;
-    if (user == null) return null;
-
-    final idToken = await FirebaseAuth.instance.currentUser?.getIdToken();
-    if (idToken == null) return null;
-
-    String formattedNumber = phoneNumber.replaceAll(' ', '');
-    final uri = 'http://10.0.2.2:8000/user/$formattedNumber';
-
     try {
-      final response = await http.get(
+      final uri = 'http://10.0.2.2:8000/verify-user';
+      final response = await http.post(
         Uri.parse(uri),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer $idToken',
-        },
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({'token': idToken}),
       );
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
-        return UserModel.fromJson(data);
-      } else if (response.statusCode == 404) {
-        return null;
+        final user = UserModel.fromJson(data['user']);
+        final userId = user.mongoId;
+        await chatListRepo.getChatList(userId, idToken);
+        return user;
       } else {
         return null;
       }
     } catch (e) {
-      return null;
+      rethrow;
     }
   }
 
-  Future<void> fetchConversation(String userId) async {}
-
+  @override
+  // Future<UserEntity?> fetchUserData(String phoneNumber) async {
+  //   final user = _auth.currentUser;
+  //   if (user == null) return null;
+  //
+  //   final idToken = await FirebaseAuth.instance.currentUser?.getIdToken();
+  //   if (idToken == null) return null;
+  //
+  //   String formattedNumber = phoneNumber.replaceAll(' ', '');
+  //   final uri = 'http://10.0.2.2:8000/user/$formattedNumber';
+  //
+  //   try {
+  //     final response = await http.get(
+  //       Uri.parse(uri),
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //         'Authorization': 'Bearer $idToken',
+  //       },
+  //     );
+  //
+  //     if (response.statusCode == 200) {
+  //       final data = jsonDecode(response.body);
+  //       return UserModel.fromJson(data);
+  //     } else if (response.statusCode == 404) {
+  //       return null;
+  //     } else {
+  //       return null;
+  //     }
+  //   } catch (e) {
+  //     return null;
+  //   }
+  // }
   @override
   bool get isLoggedIn => _auth.currentUser != null;
 }
