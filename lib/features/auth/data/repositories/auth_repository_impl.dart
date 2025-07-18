@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:hive_flutter/adapters.dart';
 import 'package:http/http.dart' as http;
 import 'package:whatsapp_clone/features/auth/data/model/user_model.dart';
 import 'package:whatsapp_clone/features/auth/domain/entities/user_entity.dart';
@@ -51,7 +52,6 @@ class AuthRepositoryImpl implements AuthRepository {
 
       await _auth.signInWithCredential(credential);
       final idToken = await _auth.currentUser!.getIdToken();
-
       await sendIdTokenToBackend(idToken!);
     } catch (e) {
       return null;
@@ -77,49 +77,21 @@ class AuthRepositoryImpl implements AuthRepository {
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         final user = UserModel.fromJson(data['user']);
-        final userId = user.mongoId;
-        await chatListRepo.getChatList(userId, idToken);
+
+        final box = Hive.box('authBox');
+        await box.put('mongoId', user.mongoId);
+        await box.put('idToken', idToken);
+
         return user;
       } else {
         return null;
       }
     } catch (e) {
+      print(e);
       rethrow;
     }
   }
 
-  @override
-  // Future<UserEntity?> fetchUserData(String phoneNumber) async {
-  //   final user = _auth.currentUser;
-  //   if (user == null) return null;
-  //
-  //   final idToken = await FirebaseAuth.instance.currentUser?.getIdToken();
-  //   if (idToken == null) return null;
-  //
-  //   String formattedNumber = phoneNumber.replaceAll(' ', '');
-  //   final uri = 'http://10.0.2.2:8000/user/$formattedNumber';
-  //
-  //   try {
-  //     final response = await http.get(
-  //       Uri.parse(uri),
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //         'Authorization': 'Bearer $idToken',
-  //       },
-  //     );
-  //
-  //     if (response.statusCode == 200) {
-  //       final data = jsonDecode(response.body);
-  //       return UserModel.fromJson(data);
-  //     } else if (response.statusCode == 404) {
-  //       return null;
-  //     } else {
-  //       return null;
-  //     }
-  //   } catch (e) {
-  //     return null;
-  //   }
-  // }
   @override
   bool get isLoggedIn => _auth.currentUser != null;
 }

@@ -3,6 +3,8 @@ part of 'chat_list_bloc.dart';
 @immutable
 sealed class ChatListEvent {}
 
+class LoadChatList extends ChatListEvent {}
+
 //Show menu List Event
 class NewGroupTapped extends ChatListEvent {}
 
