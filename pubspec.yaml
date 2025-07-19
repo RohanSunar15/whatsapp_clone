@@ -36,6 +36,7 @@ dependencies:
   http:
   flutter_dotenv:
   hive_flutter:
+  intl:
 
 
   # The following adds the Cupertino Icons font to your application.
