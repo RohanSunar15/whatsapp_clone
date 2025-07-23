@@ -12,8 +12,8 @@ String formatChatTimestamp(DateTime timestamp) {
   final yesterday = now.subtract(Duration(days: 1));
   final isYesterday =
       yesterday.year == localTime.year &&
-      now.month == localTime.month &&
-      now.day == localTime.day;
+      yesterday.month == localTime.month &&
+      yesterday.day == localTime.day;
 
   if (isSameDay) {
     // e.g., 1:50 AM
