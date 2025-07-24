@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:whatsapp_clone/core/theme/app_color.dart';
 import 'package:whatsapp_clone/core/widgets/common/app_navigator.dart';
 import 'package:whatsapp_clone/core/widgets/custom_widgets/custom_show_menu.dart';
-import 'package:whatsapp_clone/data/chat_data.dart';
 import 'package:whatsapp_clone/features/chatList/presentation/bloc/chat_list_bloc.dart';
 import 'package:whatsapp_clone/features/chatList/widgets/chat_user_tile.dart';
 import 'package:whatsapp_clone/features/chatList/widgets/custom_bottom_nav_bar.dart';
@@ -18,7 +17,11 @@ class ChatList extends StatefulWidget {
 }
 
 class _ChatListState extends State<ChatList> {
-
+  @override
+  void initState() {
+    super.initState();
+    context.read<ChatListBloc>().add(LoadChatList());
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,15 +32,20 @@ class _ChatListState extends State<ChatList> {
         }
       },
       builder: (context, state) {
-        return Scaffold(
-          appBar: AppBar(
+        if (state is ChatListLoaded) {
+          final chatList = state.chatList;
+          return Scaffold(
+            appBar: AppBar(
               automaticallyImplyLeading: false,
               scrolledUnderElevation: 0,
-              title: Text('WhatsApp', style: TextStyle(
-                color: AppColor.lightGreen,
-                fontSize: 25,
-                fontWeight: FontWeight.bold,
-              ),),
+              title: Text(
+                'WhatsApp',
+                style: TextStyle(
+                  color: AppColor.lightGreen,
+                  fontSize: 25,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
               actions: [
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 10.0),
@@ -92,9 +100,10 @@ class _ChatListState extends State<ChatList> {
                           ),
                           CustomShowMenuItem(
                             text: "Settings",
-                            onTap: () =>
-                                context.read<ChatListBloc>().add(
-                                    SettingsTapped()),
+                            onTap:
+                                () => context.read<ChatListBloc>().add(
+                                  SettingsTapped(),
+                                ),
                             textColor: AppColor.black,
                           ),
                         ],
@@ -102,44 +111,43 @@ class _ChatListState extends State<ChatList> {
                     },
                     child: Icon(Icons.more_vert),
                   ),
-                )
-              ]
-
-          ),
-          floatingActionButton: Container(
+                ),
+              ],
+            ),
+            floatingActionButton: Container(
               decoration: BoxDecoration(
-                  borderRadius: BorderRadius.all(
-                      Radius.circular(5)
-                  ),
-                  color: AppColor.lightGreen
+                borderRadius: BorderRadius.all(Radius.circular(5)),
+                color: AppColor.lightGreen,
               ),
               child: Padding(
                 padding: const EdgeInsets.all(12.0),
                 child: Icon(Icons.chat),
-              )),
-
-          bottomNavigationBar: CustomBottomNavBar(),
-          body: Center(
-            child: Column(
-              children: [
-                SearchBarWidget(),
-                Expanded(
-                  child: ListView.builder(
-                    itemCount: chatList.length,
-                    itemBuilder: (context, index) {
-                      return ChatUserTileWidget(
-                        chat: chatList[index],
-                        onTap: () {
-                          
-                        },
-                      );
-                    },
-                  ),
-                ),
-              ],
+              ),
             ),
-          ),
-        );
+
+            bottomNavigationBar: CustomBottomNavBar(),
+            body: Center(
+              child: Column(
+                children: [
+                  SearchBarWidget(),
+                  Expanded(
+                    child: ListView.builder(
+                      itemCount: chatList.length,
+                      itemBuilder: (context, index) {
+                        return ChatUserTileWidget(
+                          chat: chatList[index]!,
+                          onTap: () {},
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        } else {
+          return Scaffold(body: Center(child: Text('Nothing!!!!')));
+        }
       },
     );
   }

@@ -7,7 +7,6 @@ import 'package:whatsapp_clone/core/theme/app_theme.dart';
 import 'package:whatsapp_clone/features/auth/data/repositories/auth_repository_impl.dart';
 import 'package:whatsapp_clone/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:whatsapp_clone/features/chatList/data/repositories/chatlist_respository_impl.dart';
-import 'package:whatsapp_clone/features/chatList/domain/usecases/get_chat_list_usecase.dart';
 import 'package:whatsapp_clone/features/chatList/presentation/bloc/chat_list_bloc.dart';
 import 'package:whatsapp_clone/features/chatList/presentation/bloc/custom_bottom_nav_bar_cubit.dart';
 import 'package:whatsapp_clone/features/splash/presentation/splash_screen.dart';
@@ -23,10 +22,7 @@ void main() async {
     MultiBlocProvider(
       providers: [
         BlocProvider(create: (_) => AuthBloc(AuthRepositoryImpl())),
-        BlocProvider(
-          create:
-              (_) => ChatListBloc(GetChatListUseCase(ChatListRepositoryImpl())),
-        ),
+        BlocProvider(create: (_) => ChatListBloc(ChatListRepositoryImpl())),
         BlocProvider<CustomBottomNavBarCubit>(
           create: (_) => CustomBottomNavBarCubit(),
         ),

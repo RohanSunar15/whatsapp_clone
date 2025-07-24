@@ -18,9 +18,6 @@ class ChatListRepositoryImpl extends ChatListRepository {
       throw Exception('User not logged in');
     }
 
-    print('Stored mongoId: ${box.get('mongoId')}');
-    print('Stored idToken: ${box.get('idToken')}');
-
     final baseUrl = dotenv.env['GET_CONVERSATIONS_URL'];
 
     if (baseUrl == null) {
@@ -40,8 +37,8 @@ class ChatListRepositoryImpl extends ChatListRepository {
     if (response.statusCode == 200) {
       final Map<String, dynamic> jsonData = jsonDecode(response.body);
       final List<dynamic> chatList = jsonData['conversations'];
-      print(chatList);
-      return chatList.map((e) => ChatListModel.fromJson(e)).toList();
+      final chat = chatList.map((e) => ChatListModel.fromJson(e)).toList();
+      return chat;
     } else {
       throw Exception('Error fetching chat list');
     }
