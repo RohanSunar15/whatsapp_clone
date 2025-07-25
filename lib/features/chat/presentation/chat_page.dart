@@ -1,17 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:whatsapp_clone/core/theme/app_color.dart';
 
-class ChatMessageScreen extends StatefulWidget {
+class ChatScreen extends StatefulWidget {
   final String userName;
   final String userImage;
 
-  const ChatMessageScreen({super.key, required this.userName, required this.userImage});
+  const ChatScreen({
+    super.key,
+    required this.userName,
+    required this.userImage,
+  });
 
   @override
-  State<ChatMessageScreen> createState() => _ChatMessageScreenState();
+  State<ChatScreen> createState() => _ChatMessageScreenState();
 }
 
-class _ChatMessageScreenState extends State<ChatMessageScreen> {
+class _ChatMessageScreenState extends State<ChatScreen> {
   final List<Map<String, dynamic>> _messages = [
     {"text": "Hey there!", "isMe": false},
     {"text": "Hi! How are you?", "isMe": true},
@@ -23,10 +27,7 @@ class _ChatMessageScreenState extends State<ChatMessageScreen> {
   void _sendMessage() {
     if (_controller.text.trim().isNotEmpty) {
       setState(() {
-        _messages.add({
-          "text": _controller.text.trim(),
-          "isMe": true,
-        });
+        _messages.add({"text": _controller.text.trim(), "isMe": true});
       });
       _controller.clear();
     }
@@ -40,11 +41,9 @@ class _ChatMessageScreenState extends State<ChatMessageScreen> {
         backgroundColor: AppColor.lightGreen,
         title: Row(
           children: [
-            CircleAvatar(
-              backgroundImage: NetworkImage(widget.userImage),
-            ),
+            CircleAvatar(backgroundImage: NetworkImage(widget.userImage)),
             const SizedBox(width: 10),
-            Text(widget.userName, style: TextStyle(fontSize: 15),),
+            Text(widget.userName, style: TextStyle(fontSize: 15)),
           ],
         ),
       ),
@@ -60,18 +59,27 @@ class _ChatMessageScreenState extends State<ChatMessageScreen> {
                 final isMe = msg["isMe"] as bool;
 
                 return Align(
-                  alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
+                  alignment:
+                      isMe ? Alignment.centerRight : Alignment.centerLeft,
                   child: Container(
                     margin: const EdgeInsets.symmetric(vertical: 4),
                     padding: const EdgeInsets.all(12),
-                    constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.75),
+                    constraints: BoxConstraints(
+                      maxWidth: MediaQuery.of(context).size.width * 0.75,
+                    ),
                     decoration: BoxDecoration(
                       color: isMe ? AppColor.lightGreen : Colors.grey.shade300,
                       borderRadius: BorderRadius.only(
                         topLeft: const Radius.circular(12),
                         topRight: const Radius.circular(12),
-                        bottomLeft: isMe ? const Radius.circular(12) : const Radius.circular(0),
-                        bottomRight: isMe ? const Radius.circular(0) : const Radius.circular(12),
+                        bottomLeft:
+                            isMe
+                                ? const Radius.circular(12)
+                                : const Radius.circular(0),
+                        bottomRight:
+                            isMe
+                                ? const Radius.circular(0)
+                                : const Radius.circular(12),
                       ),
                     ),
                     child: Text(
@@ -104,7 +112,7 @@ class _ChatMessageScreenState extends State<ChatMessageScreen> {
                 IconButton(
                   icon: Icon(Icons.send, color: AppColor.lightGreen),
                   onPressed: _sendMessage,
-                )
+                ),
               ],
             ),
           ),
