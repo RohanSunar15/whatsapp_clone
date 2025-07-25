@@ -7,7 +7,7 @@ import 'package:http/http.dart' as http;
 import 'package:whatsapp_clone/features/auth/data/model/user_model.dart';
 import 'package:whatsapp_clone/features/auth/domain/entities/user_entity.dart';
 import 'package:whatsapp_clone/features/auth/domain/repositories/auth_repository.dart';
-import 'package:whatsapp_clone/features/chatList/data/repositories/chatlist_respository_impl.dart';
+import 'package:whatsapp_clone/features/chatList/data/repositories/chatlist_repository_impl.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -86,7 +86,7 @@ class AuthRepositoryImpl implements AuthRepository {
 
         return user;
       } else {
-        return null;
+        throw Exception('Error fetching idToken');
       }
     } catch (e) {
       print(e);

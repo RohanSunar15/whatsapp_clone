@@ -6,7 +6,7 @@ import 'package:hive_flutter/adapters.dart';
 import 'package:whatsapp_clone/core/theme/app_theme.dart';
 import 'package:whatsapp_clone/features/auth/data/repositories/auth_repository_impl.dart';
 import 'package:whatsapp_clone/features/auth/presentation/bloc/auth_bloc.dart';
-import 'package:whatsapp_clone/features/chatList/data/repositories/chatlist_respository_impl.dart';
+import 'package:whatsapp_clone/features/chatList/data/repositories/chatlist_repository_impl.dart';
 import 'package:whatsapp_clone/features/chatList/presentation/bloc/chat_list_bloc.dart';
 import 'package:whatsapp_clone/features/chatList/presentation/bloc/custom_bottom_nav_bar_cubit.dart';
 import 'package:whatsapp_clone/features/splash/presentation/splash_screen.dart';
