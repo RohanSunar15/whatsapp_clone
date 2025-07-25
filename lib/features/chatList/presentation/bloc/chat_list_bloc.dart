@@ -22,7 +22,6 @@ class ChatListBloc extends Bloc<ChatListEvent, ChatListState> {
   ) async {
     try {
       final data = await chatListRepository.getChatList();
-      print(data);
       emit(ChatListLoaded(data));
     } catch (error) {
       emit(ChatListError());
