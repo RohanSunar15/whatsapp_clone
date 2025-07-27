@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:whatsapp_clone/core/theme/app_color.dart';
+import 'package:whatsapp_clone/features/chat/widgets/message_bubble.dart';
 
 class ChatScreen extends StatefulWidget {
   final String userName;
@@ -18,32 +19,31 @@ class ChatScreen extends StatefulWidget {
 class _ChatMessageScreenState extends State<ChatScreen> {
   final List<Map<String, dynamic>> _messages = [
     {"text": "Hey there!", "isMe": false},
-    {"text": "Hi! How are you?", "isMe": true},
+    {"text": "Hi! How are you? ", "isMe": true},
     {"text": "All good! You?", "isMe": false},
   ];
 
-  final TextEditingController _controller = TextEditingController();
-
-  void _sendMessage() {
-    if (_controller.text.trim().isNotEmpty) {
-      setState(() {
-        _messages.add({"text": _controller.text.trim(), "isMe": true});
-      });
-      _controller.clear();
-    }
-  }
+  TextEditingController messageController = TextEditingController();
+  bool isTyping = false;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColor.lightModeBackgroundColor,
+      backgroundColor: AppColor.cream,
       appBar: AppBar(
-        backgroundColor: AppColor.lightGreen,
+        backgroundColor: AppColor.white,
         title: Row(
           children: [
+            Icon(Icons.arrow_back, color: AppColor.black, size: 30),
             CircleAvatar(backgroundImage: NetworkImage(widget.userImage)),
             const SizedBox(width: 10),
-            Text(widget.userName, style: TextStyle(fontSize: 15)),
+            Text(widget.userName, style: TextStyle(fontSize: 17)),
+            Spacer(),
+            Icon(Icons.videocam_outlined, size: 35),
+            SizedBox(width: 20),
+            Icon(Icons.phone_outlined, size: 30),
+            SizedBox(width: 20),
+            Icon(Icons.more_vert, size: 30),
           ],
         ),
       ),
@@ -58,65 +58,71 @@ class _ChatMessageScreenState extends State<ChatScreen> {
                 final msg = _messages[_messages.length - 1 - index];
                 final isMe = msg["isMe"] as bool;
 
-                return Align(
-                  alignment:
-                      isMe ? Alignment.centerRight : Alignment.centerLeft,
-                  child: Container(
-                    margin: const EdgeInsets.symmetric(vertical: 4),
-                    padding: const EdgeInsets.all(12),
-                    constraints: BoxConstraints(
-                      maxWidth: MediaQuery.of(context).size.width * 0.75,
-                    ),
-                    decoration: BoxDecoration(
-                      color: isMe ? AppColor.lightGreen : Colors.grey.shade300,
-                      borderRadius: BorderRadius.only(
-                        topLeft: const Radius.circular(12),
-                        topRight: const Radius.circular(12),
-                        bottomLeft:
-                            isMe
-                                ? const Radius.circular(12)
-                                : const Radius.circular(0),
-                        bottomRight:
-                            isMe
-                                ? const Radius.circular(0)
-                                : const Radius.circular(12),
-                      ),
-                    ),
-                    child: Text(
-                      msg["text"],
-                      style: TextStyle(
-                        color: isMe ? Colors.white : Colors.black,
-                        fontSize: 16,
-                      ),
-                    ),
-                  ),
+                return MessageBubble(
+                  message: msg["text"],
+                  time: "12:00 pm",
+                  isMe: isMe,
+                  isSeen: isMe,
                 );
               },
             ),
           ),
-          const Divider(height: 1),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            color: Colors.white,
-            child: Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    controller: _controller,
-                    decoration: const InputDecoration(
-                      hintText: "Type a message...",
-                      border: InputBorder.none,
-                    ),
-                  ),
-                ),
-                IconButton(
-                  icon: Icon(Icons.send, color: AppColor.lightGreen),
-                  onPressed: _sendMessage,
-                ),
-              ],
-            ),
-          ),
         ],
+      ),
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.all(15.0),
+        child: Row(
+          children: [
+            Expanded(
+              child: Container(
+                decoration: BoxDecoration(
+                  color: AppColor.white,
+                  borderRadius: BorderRadius.circular(30),
+                ),
+                child: Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Icon(Icons.emoji_emotions_outlined),
+                    ),
+                    Expanded(
+                      child: TextField(
+                        controller: messageController,
+                        cursorColor: AppColor.lightGreen,
+                        decoration: InputDecoration(
+                          contentPadding: EdgeInsets.all(10),
+                          hintText: "Message",
+                          border: InputBorder.none,
+                        ),
+                      ),
+                    ),
+
+                    Icon(Icons.attach_file_outlined),
+                    IconButton(
+                      icon: const Icon(Icons.currency_rupee),
+                      color: Colors.grey[700],
+                      onPressed: () {},
+                    ),
+                    Icon(Icons.camera_alt_outlined),
+
+                    SizedBox(width: 10),
+                  ],
+                ),
+              ),
+            ),
+            SizedBox(width: 7),
+            Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(30)),
+                color: AppColor.lightGreen,
+              ),
+              child: IconButton(
+                icon: Icon(Icons.mic, color: AppColor.white),
+                onPressed: () {},
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
