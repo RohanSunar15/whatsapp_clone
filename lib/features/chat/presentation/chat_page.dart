@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:whatsapp_clone/core/theme/app_color.dart';
+import 'package:whatsapp_clone/features/chat/presentation/bloc/chat_bloc.dart';
 import 'package:whatsapp_clone/features/chat/widgets/message_bubble.dart';
 
 class ChatScreen extends StatefulWidget {
@@ -23,107 +25,140 @@ class _ChatMessageScreenState extends State<ChatScreen> {
     {"text": "All good! You?", "isMe": false},
   ];
 
-  TextEditingController messageController = TextEditingController();
-  bool isTyping = false;
+  final TextEditingController messageController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColor.cream,
-      appBar: AppBar(
-        backgroundColor: AppColor.white,
-        title: Row(
-          children: [
-            Icon(Icons.arrow_back, color: AppColor.black, size: 30),
-            CircleAvatar(backgroundImage: NetworkImage(widget.userImage)),
-            const SizedBox(width: 10),
-            Text(widget.userName, style: TextStyle(fontSize: 17)),
-            Spacer(),
-            Icon(Icons.videocam_outlined, size: 35),
-            SizedBox(width: 20),
-            Icon(Icons.phone_outlined, size: 30),
-            SizedBox(width: 20),
-            Icon(Icons.more_vert, size: 30),
-          ],
-        ),
-      ),
-      body: Column(
-        children: [
-          Expanded(
-            child: ListView.builder(
-              reverse: true,
-              padding: const EdgeInsets.all(12),
-              itemCount: _messages.length,
-              itemBuilder: (context, index) {
-                final msg = _messages[_messages.length - 1 - index];
-                final isMe = msg["isMe"] as bool;
+    return BlocConsumer<ChatBloc, ChatState>(
+      listener: (context, state) {
+        // TODO: implement listener
+      },
+      builder: (context, state) {
+        bool showSend = false;
+        if (state is MessageInputChanged) {
+          showSend = state.showSendButton;
+        }
 
-                return MessageBubble(
-                  message: msg["text"],
-                  time: "12:00 pm",
-                  isMe: isMe,
-                  isSeen: isMe,
-                );
-              },
+        return Scaffold(
+          backgroundColor: AppColor.cream,
+          appBar: AppBar(
+            backgroundColor: AppColor.white,
+            title: Row(
+              children: [
+                Icon(Icons.arrow_back, color: AppColor.black, size: 30),
+                CircleAvatar(backgroundImage: NetworkImage(widget.userImage)),
+                const SizedBox(width: 10),
+                Text(widget.userName, style: TextStyle(fontSize: 17)),
+                Spacer(),
+                Icon(Icons.videocam_outlined, size: 35),
+                SizedBox(width: 20),
+                Icon(Icons.phone_outlined, size: 30),
+                SizedBox(width: 20),
+                Icon(Icons.more_vert, size: 30),
+              ],
             ),
           ),
-        ],
-      ),
-      bottomNavigationBar: Padding(
-        padding: const EdgeInsets.all(15.0),
-        child: Row(
-          children: [
-            Expanded(
-              child: Container(
-                decoration: BoxDecoration(
-                  color: AppColor.white,
-                  borderRadius: BorderRadius.circular(30),
+          body: Column(
+            children: [
+              Expanded(
+                child: ListView.builder(
+                  reverse: true,
+                  padding: const EdgeInsets.all(12),
+                  itemCount: _messages.length,
+                  itemBuilder: (context, index) {
+                    final msg = _messages[_messages.length - 1 - index];
+                    final isMe = msg["isMe"] as bool;
+
+                    return MessageBubble(
+                      message: msg["text"],
+                      time: "12:00 pm",
+                      isMe: isMe,
+                      isSeen: isMe,
+                    );
+                  },
                 ),
-                child: Row(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Icon(Icons.emoji_emotions_outlined),
+              ),
+            ],
+          ),
+          bottomNavigationBar: Padding(
+            padding: const EdgeInsets.all(15.0),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: AppColor.white,
+                      borderRadius: BorderRadius.circular(30),
                     ),
-                    Expanded(
-                      child: TextField(
-                        controller: messageController,
-                        cursorColor: AppColor.lightGreen,
-                        decoration: InputDecoration(
-                          contentPadding: EdgeInsets.all(10),
-                          hintText: "Message",
-                          border: InputBorder.none,
+                    child: Row(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Icon(Icons.emoji_emotions_outlined),
                         ),
-                      ),
+                        Expanded(
+                          child: TextField(
+                            controller: messageController,
+                            onChanged: (text) {
+                              context.read<ChatBloc>().add(
+                                MessageTextChanged(text),
+                              );
+                            },
+                            minLines: 1,
+                            maxLines: 6,
+                            keyboardType: TextInputType.multiline,
+                            cursorColor: AppColor.lightGreen,
+                            decoration: InputDecoration(
+                              contentPadding: EdgeInsets.all(10),
+                              hintText: "Message",
+                              border: InputBorder.none,
+                            ),
+                          ),
+                        ),
+                        Icon(Icons.attach_file_outlined),
+                        SizedBox(width: 10),
+                        if (!showSend)
+                          Row(
+                            children: [
+                              Icon(Icons.currency_rupee),
+                              SizedBox(width: 10),
+                              Icon(Icons.camera_alt_outlined),
+                              SizedBox(width: 10),
+                            ],
+                          ),
+                      ],
                     ),
-
-                    Icon(Icons.attach_file_outlined),
-                    IconButton(
-                      icon: const Icon(Icons.currency_rupee),
-                      color: Colors.grey[700],
-                      onPressed: () {},
-                    ),
-                    Icon(Icons.camera_alt_outlined),
-
-                    SizedBox(width: 10),
-                  ],
+                  ),
                 ),
-              ),
+                SizedBox(width: 7),
+
+                Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(30)),
+                    color: AppColor.lightGreen,
+                  ),
+                  child: IconButton(
+                    icon: Icon(
+                      showSend ? Icons.send : Icons.mic,
+                      color: AppColor.white,
+                    ),
+                    onPressed: () {
+                      final text = messageController.text;
+                      if (text.isNotEmpty) {
+                        // context.read<ChatBloc>().add(
+                        //   SendMessageButtonClicked(),
+                        // );
+                        print(text);
+                        messageController.clear();
+                      }
+                    },
+                  ),
+                ),
+              ],
             ),
-            SizedBox(width: 7),
-            Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(30)),
-                color: AppColor.lightGreen,
-              ),
-              child: IconButton(
-                icon: Icon(Icons.mic, color: AppColor.white),
-                onPressed: () {},
-              ),
-            ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 }
