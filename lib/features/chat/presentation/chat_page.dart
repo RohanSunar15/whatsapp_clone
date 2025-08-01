@@ -28,7 +28,6 @@ class _ChatMessageScreenState extends State<ChatScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     context.read<ChatBloc>().add(
       LoadChatMessage(conversationId: widget.conversationId),
@@ -38,9 +37,7 @@ class _ChatMessageScreenState extends State<ChatScreen> {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<ChatBloc, ChatState>(
-      listener: (context, state) {
-        // TODO: implement listener
-      },
+      listener: (context, state) {},
       builder: (context, state) {
         if (state is ChatMessageLoaded) {
           final box = Hive.box('authBox');
