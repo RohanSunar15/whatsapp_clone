@@ -2,11 +2,15 @@ import 'package:intl/intl.dart';
 
 class DateFormatter {
   static String formatToTime(DateTime localTime) {
-    return DateFormat('h:mm a').format(localTime); // e.g., 11:50 PM
+    return DateFormat(
+      'h:mm a',
+    ).format(localTime).toLowerCase(); // e.g., 11:50 PM
   }
 
   static String formatToDate(DateTime localTime) {
-    return DateFormat('dd/MM/yy').format(localTime); // e.g., 01/08/25
+    return DateFormat(
+      'dd/MM/yy',
+    ).format(localTime).toLowerCase(); // e.g., 01/08/25
   }
 
   static String formatChatTimestamp(DateTime timestamp) {
