@@ -1,6 +1,6 @@
 # 📱 WhatsApp Clone
 
-A full-stack WhatsApp Clone built using Flutter for the frontend and Node.js + MongoDB for the backend, featuring Firebase for OTP-based authentication. The app supports real-time messaging, user authentication, profile setup, and more.
+A full-stack WhatsApp Clone built using Flutter for the frontend and Node.js + MongoDB for the backend, featuring Firebase for OTP-based authentication and Hive for local storage. The app supports real-time messaging, user authentication, profile setup, and more.
 
 ---
 
@@ -9,6 +9,7 @@ A full-stack WhatsApp Clone built using Flutter for the frontend and Node.js + M
 ### 🚀 Frontend (Flutter)
 - Flutter (BLoC pattern + Clean Architecture)
 - Firebase Auth (Phone number verification)
+- Hive (Local NoSQL DB for fast storage and caching)
 - REST API integration
 
 ### 🛠 Backend (Node.js)
