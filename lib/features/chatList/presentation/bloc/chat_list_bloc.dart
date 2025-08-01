@@ -14,6 +14,8 @@ class ChatListBloc extends Bloc<ChatListEvent, ChatListState> {
   ChatListBloc(this.chatListRepository) : super(ChatListInitial()) {
     on<LoadChatList>(loadChatList);
     on<SettingsTapped>(_settingsTapped);
+
+    on<ChatTileClicked>(chatTileClicked);
   }
 
   FutureOr<void> loadChatList(
@@ -22,6 +24,7 @@ class ChatListBloc extends Bloc<ChatListEvent, ChatListState> {
   ) async {
     try {
       final data = await chatListRepository.getChatList();
+      print(data);
       emit(ChatListLoaded(data));
     } catch (error) {
       emit(ChatListError());
@@ -33,5 +36,19 @@ class ChatListBloc extends Bloc<ChatListEvent, ChatListState> {
     Emitter<ChatListState> emit,
   ) {
     emit(NavigateToSetting());
+  }
+
+  FutureOr<void> chatTileClicked(
+    ChatTileClicked event,
+    Emitter<ChatListState> emit,
+  ) {
+    emit(
+      NavigateToChat(
+        conversationId: event.conversationId,
+        otherUserId: event.otherUserId,
+        otherUserName: event.otherUserName,
+        otherUserProfileImage: event.otherUserProfileImage,
+      ),
+    );
   }
 }

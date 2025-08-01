@@ -13,3 +13,17 @@ class ChatListLoaded extends ChatListState {
 class ChatListError extends ChatListState {}
 
 class NavigateToSetting extends ChatListState {}
+
+class NavigateToChat extends ChatListState {
+  final String conversationId;
+  final String otherUserId;
+  final String otherUserName;
+  final String otherUserProfileImage;
+
+  NavigateToChat({
+    required this.conversationId,
+    required this.otherUserId,
+    required this.otherUserName,
+    required this.otherUserProfileImage,
+  });
+}

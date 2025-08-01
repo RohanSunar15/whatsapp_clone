@@ -28,7 +28,7 @@ class ChatListEntity {
   });
 
   //
-  String get formattedTimestamp => formatChatTimestamp(timestamp);
+  String get formattedTimestamp => DateFormatter.formatChatTimestamp(timestamp);
 
   @override
   String toString() {
@@ -36,8 +36,8 @@ class ChatListEntity {
         'lastMessage: $lastMessage, '
         'timestamp: $formattedTimestamp '
         'otherUserId: $otherUserId, '
-        'otherUserId: $otherUserId, '
-        'otherUserName: $otherUserProfileImage)'
+        'otherUserName: $otherUserName, '
+        'otherUserProfileImage: $otherUserProfileImage)'
         'unreadCount: $unreadCount)'
         'isCall: $isCall)'
         'callType: $callType)'

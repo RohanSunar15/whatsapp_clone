@@ -3,6 +3,12 @@ part of 'chat_bloc.dart';
 @immutable
 sealed class ChatEvent {}
 
+class LoadChatMessage extends ChatEvent {
+  final String conversationId;
+
+  LoadChatMessage({required this.conversationId});
+}
+
 class BackButtonClicked extends ChatEvent {}
 
 class VideoCallButtonClicked extends ChatEvent {}

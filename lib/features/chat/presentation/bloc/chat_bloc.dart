@@ -2,15 +2,39 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
+import 'package:whatsapp_clone/features/chat/data/repositories/chat_repository_impl.dart';
+import 'package:whatsapp_clone/features/chat/domain/entities/chat_entity.dart';
 
 part 'chat_event.dart';
 part 'chat_state.dart';
 
 class ChatBloc extends Bloc<ChatEvent, ChatState> {
-  ChatBloc() : super(ChatInitial()) {
+  final ChatRepositoryImpl chatRepositoryImpl;
+  ChatBloc(this.chatRepositoryImpl) : super(ChatInitial()) {
+    on<LoadChatMessage>(loadChatMessage);
     on<BackButtonClicked>(backButtonClicked);
 
     on<MessageTextChanged>(messageTextChanged);
+  }
+
+  FutureOr<void> loadChatMessage(
+    LoadChatMessage event,
+    Emitter<ChatState> emit,
+  ) async {
+    try {
+      final data = await chatRepositoryImpl.getChatMessage(
+        event.conversationId,
+      );
+      print(data);
+
+      if (data.isEmpty) {
+        emit(ChatErrorMessage(errorMessage: 'No message found'));
+      }
+
+      emit(ChatMessageLoaded(chatMessage: data));
+    } catch (error) {
+      emit(ChatErrorMessage(errorMessage: error.toString()));
+    }
   }
 
   FutureOr<void> backButtonClicked(

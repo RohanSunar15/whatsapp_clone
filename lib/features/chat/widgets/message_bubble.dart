@@ -11,7 +11,7 @@ class MessageBubble extends StatelessWidget {
     required this.message,
     required this.time,
     required this.isMe,
-    this.isSeen = false,
+    required this.isSeen,
   });
 
   @override

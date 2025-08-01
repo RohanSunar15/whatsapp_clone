@@ -27,3 +27,17 @@ class SettingsTapped extends ChatListEvent {}
 class CameraIconTapped extends ChatListEvent {}
 
 class QRScannerIconTapped extends ChatListEvent {}
+
+class ChatTileClicked extends ChatListEvent {
+  final String conversationId;
+  final String otherUserId;
+  final String otherUserName;
+  final String otherUserProfileImage;
+
+  ChatTileClicked({
+    required this.conversationId,
+    required this.otherUserId,
+    required this.otherUserName,
+    required this.otherUserProfileImage,
+  });
+}

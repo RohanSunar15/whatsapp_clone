@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:whatsapp_clone/core/theme/app_color.dart';
 import 'package:whatsapp_clone/core/widgets/common/app_navigator.dart';
 import 'package:whatsapp_clone/core/widgets/custom_widgets/custom_show_menu.dart';
+import 'package:whatsapp_clone/features/chat/presentation/chat_page.dart';
 import 'package:whatsapp_clone/features/chatList/presentation/bloc/chat_list_bloc.dart';
 import 'package:whatsapp_clone/features/chatList/widgets/chat_user_tile.dart';
 import 'package:whatsapp_clone/features/chatList/widgets/custom_bottom_nav_bar.dart';
@@ -29,6 +30,15 @@ class _ChatListState extends State<ChatList> {
       listener: (context, state) {
         if (state is NavigateToSetting) {
           AppNavigator.pushToScreen(context, SettingsScreen());
+        } else if (state is NavigateToChat) {
+          AppNavigator.pushToScreen(
+            context,
+            ChatScreen(
+              userName: state.otherUserName,
+              userImage: state.otherUserProfileImage,
+              conversationId: state.conversationId,
+            ),
+          );
         }
       },
       builder: (context, state) {
@@ -136,7 +146,24 @@ class _ChatListState extends State<ChatList> {
                       itemBuilder: (context, index) {
                         return ChatUserTileWidget(
                           chat: chatList[index]!,
-                          onTap: () {},
+                          onTap: () {
+                            final conversationId =
+                                chatList[index]!.conversationId;
+                            final otherUserId = chatList[index]!.otherUserId;
+                            final otherUserName =
+                                chatList[index]!.otherUserName;
+                            final otherUserProfileImage =
+                                chatList[index]!.otherUserProfileImage;
+
+                            context.read<ChatListBloc>().add(
+                              ChatTileClicked(
+                                conversationId: conversationId,
+                                otherUserId: otherUserId,
+                                otherUserName: otherUserName,
+                                otherUserProfileImage: otherUserProfileImage,
+                              ),
+                            );
+                          },
                         );
                       },
                     ),

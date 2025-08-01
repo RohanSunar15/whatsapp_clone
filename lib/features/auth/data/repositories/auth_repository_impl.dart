@@ -78,6 +78,9 @@ class AuthRepositoryImpl implements AuthRepository {
         final data = jsonDecode(response.body);
         final user = UserModel.fromJson(data['user']);
 
+        //Todo: Remove this line
+        print(idToken);
+
         final box = Hive.box('authBox');
         await box.put('mongoId', user.mongoId);
         await box.put('idToken', idToken);
