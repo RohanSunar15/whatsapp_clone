@@ -23,12 +23,6 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatMessageScreenState extends State<ChatScreen> {
-  // final List<Map<String, dynamic>> _messages = [
-  //   {"text": "Hey there!", "isMe": false},
-  //   {"text": "Hi! How are you? ", "isMe": true},
-  //   {"text": "All good! You?", "isMe": false},
-  // ];
-
   final TextEditingController messageController = TextEditingController();
   bool showSend = false;
 
@@ -84,12 +78,6 @@ class _ChatMessageScreenState extends State<ChatScreen> {
                       if (msg == null) return SizedBox();
                       final isMe = msg.senderId == userId;
                       final isSeen = msg.status == 'seen';
-
-                      print(msg);
-                      print(msg.text);
-                      print(msg.senderId);
-                      print(isMe);
-                      print(isSeen);
 
                       return MessageBubble(
                         message: msg.text,
