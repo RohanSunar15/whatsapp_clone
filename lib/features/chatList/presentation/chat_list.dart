@@ -37,6 +37,7 @@ class _ChatListState extends State<ChatList> {
               userName: state.otherUserName,
               userImage: state.otherUserProfileImage,
               conversationId: state.conversationId,
+              receiverId: state.otherUserId,
             ),
           );
         }

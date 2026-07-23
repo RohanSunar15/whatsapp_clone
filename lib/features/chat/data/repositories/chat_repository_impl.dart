@@ -38,4 +38,37 @@ class ChatRepositoryImpl extends ChatRepository {
       throw Exception('Error fetching chat list');
     }
   }
+
+  @override
+  Future<void> sendMessage({
+    required String conversationId,
+    required String receiverId,
+    required String text,
+  }) async {
+    final box = Hive.box('authBox');
+    final idToken = box.get('idToken');
+
+    final baseUrl = dotenv.env['SEND_MESSAGE_URL'];
+
+    if (baseUrl == null) {
+      throw Exception("SEND_MESSAGE_URL not set in .env file");
+    }
+
+    final response = await http.post(
+      Uri.parse(baseUrl),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $idToken',
+      },
+      body: jsonEncode({
+        'conversationId': conversationId,
+        'receiverId': receiverId,
+        'text': text,
+      }),
+    );
+
+    if (response.statusCode != 200 && response.statusCode != 201) {
+      throw Exception('Failed to send message: ${response.statusCode}');
+    }
+  }
 }

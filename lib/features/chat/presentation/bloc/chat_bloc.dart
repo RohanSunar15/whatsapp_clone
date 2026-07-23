@@ -13,8 +13,8 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   ChatBloc(this.chatRepositoryImpl) : super(ChatInitial()) {
     on<LoadChatMessage>(loadChatMessage);
     on<BackButtonClicked>(backButtonClicked);
-
     on<MessageTextChanged>(messageTextChanged);
+    on<SendMessageButtonClicked>(sendMessage);
   }
 
   FutureOr<void> loadChatMessage(
@@ -25,12 +25,6 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       final data = await chatRepositoryImpl.getChatMessage(
         event.conversationId,
       );
-      print(data);
-
-      if (data.isEmpty) {
-        emit(ChatErrorMessage(errorMessage: 'No message found'));
-      }
-
       emit(ChatMessageLoaded(chatMessage: data));
     } catch (error) {
       emit(ChatErrorMessage(errorMessage: error.toString()));
@@ -40,20 +34,29 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   FutureOr<void> backButtonClicked(
     BackButtonClicked event,
     Emitter<ChatState> emit,
-  ) {
-    print('back button clicked');
-  }
+  ) {}
 
   FutureOr<void> messageTextChanged(
     MessageTextChanged event,
     Emitter<ChatState> emit,
   ) {
-    final text = event.text;
+    emit(MessageInputChanged(event.text.isNotEmpty));
+  }
 
-    if (text.isEmpty) {
-      emit(MessageInputChanged(false));
-    } else {
-      emit(MessageInputChanged(true));
+  FutureOr<void> sendMessage(
+    SendMessageButtonClicked event,
+    Emitter<ChatState> emit,
+  ) async {
+    try {
+      await chatRepositoryImpl.sendMessage(
+        conversationId: event.conversationId,
+        receiverId: event.receiverId,
+        text: event.text,
+      );
+      final data = await chatRepositoryImpl.getChatMessage(event.conversationId);
+      emit(ChatMessageLoaded(chatMessage: data));
+    } catch (error) {
+      emit(ChatErrorMessage(errorMessage: error.toString()));
     }
   }
 }

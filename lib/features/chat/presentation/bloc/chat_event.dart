@@ -32,8 +32,13 @@ class MicButtonClicked extends ChatEvent {}
 class SendMessageButtonClicked extends ChatEvent {
   final String text;
   final String receiverId;
+  final String conversationId;
 
-  SendMessageButtonClicked({required this.text, required this.receiverId});
+  SendMessageButtonClicked({
+    required this.text,
+    required this.receiverId,
+    required this.conversationId,
+  });
 }
 
 class MessageTextChanged extends ChatEvent {
