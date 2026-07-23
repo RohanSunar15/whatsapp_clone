@@ -4,7 +4,7 @@ part of 'chat_bloc.dart';
 sealed class ChatState {}
 
 final class ChatMessageLoaded extends ChatState {
-  final List<ChatEntity?> chatMessage;
+  final List<ChatEntity> chatMessage;
 
   ChatMessageLoaded({required this.chatMessage});
 }

@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:whatsapp_clone/features/chat/domain/entities/chat_entity.dart';
 
 class ChatModel extends ChatEntity {
@@ -18,19 +19,54 @@ class ChatModel extends ChatEntity {
 
   factory ChatModel.fromJson(Map<String, dynamic> json) {
     return ChatModel(
-      id: json['_id'],
-      senderId: json['senderId'],
-      receiverId: json['receiverId'],
-      text: json['text'],
-      conversationId: json['conversationId'],
-      unreadCount: json['unreadCount'],
-      isCall: json['isCall'],
-      callType: json['callType'],
-      callStatus: json['callStatus'],
-      status: json['status'],
+      id: json['_id'] ?? '',
+      senderId: json['senderId'] ?? '',
+      receiverId: json['receiverId'] ?? '',
+      text: json['text'] ?? '',
+      conversationId: json['conversationId'] ?? '',
+      unreadCount: json['unreadCount'] ?? 0,
+      isCall: json['isCall'] ?? false,
+      callType: json['callType'] ?? '',
+      callStatus: json['callStatus'] ?? '',
+      status: json['status'] ?? 'sent',
       createdAt: DateTime.parse(json['createdAt']),
       updatedAt: DateTime.parse(json['updatedAt']),
     );
+  }
+
+  factory ChatModel.fromFirestore(DocumentSnapshot doc) {
+    final data = doc.data() as Map<String, dynamic>;
+    return ChatModel(
+      id: doc.id,
+      senderId: data['senderId'] ?? '',
+      receiverId: data['receiverId'] ?? '',
+      text: data['text'] ?? '',
+      conversationId: data['conversationId'] ?? '',
+      unreadCount: data['unreadCount'] ?? 0,
+      isCall: data['isCall'] ?? false,
+      callType: data['callType'] ?? '',
+      callStatus: data['callStatus'] ?? '',
+      status: data['status'] ?? 'sent',
+      createdAt: (data['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
+      updatedAt: (data['updatedAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
+    );
+  }
+
+  Map<String, dynamic> toFirestore() {
+    final now = Timestamp.now();
+    return {
+      'senderId': senderId,
+      'receiverId': receiverId,
+      'text': text,
+      'conversationId': conversationId,
+      'unreadCount': unreadCount,
+      'isCall': isCall,
+      'callType': callType,
+      'callStatus': callStatus,
+      'status': status,
+      'createdAt': now,
+      'updatedAt': now,
+    };
   }
 
   Map<String, dynamic> toJson() {

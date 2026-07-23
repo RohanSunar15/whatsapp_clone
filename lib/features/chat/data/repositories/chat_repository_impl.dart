@@ -1,42 +1,32 @@
-import 'dart:convert';
-
-import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:hive_flutter/adapters.dart';
-import 'package:http/http.dart' as http;
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:whatsapp_clone/features/chat/data/model/chat_model.dart';
 import 'package:whatsapp_clone/features/chat/domain/entities/chat_entity.dart';
 import 'package:whatsapp_clone/features/chat/domain/repositories/chat_repository.dart';
 
 class ChatRepositoryImpl extends ChatRepository {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  /// Firestore path: conversations/{conversationId}/messages
+  CollectionReference<Map<String, dynamic>> _messagesRef(
+    String conversationId,
+  ) =>
+      _firestore
+          .collection('conversations')
+          .doc(conversationId)
+          .collection('messages');
+
   @override
-  Future<List<ChatEntity?>> getChatMessage(String conversationId) async {
-    final box = Hive.box('authBox');
-    final idToken = box.get('idToken');
-
-    final baseUrl = dotenv.env['GET_CHAT_MESSAGE_URL'];
-
-    if (baseUrl == null) {
-      throw Exception("GET_CHAT_MESSAGE_URL not set in .env file");
-    }
-
-    final uri = '$baseUrl/$conversationId';
-
-    final response = await http.get(
-      Uri.parse(uri),
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer $idToken',
-      },
-    );
-
-    if (response.statusCode == 200) {
-      final Map<String, dynamic> jsonData = jsonDecode(response.body);
-      final List<dynamic> chatList = jsonData['messages'];
-      final chat = chatList.map((e) => ChatModel.fromJson(e)).toList();
-      return chat;
-    } else {
-      throw Exception('Error fetching chat list');
-    }
+  Stream<List<ChatEntity>> getMessagesStream(String conversationId) {
+    return _messagesRef(conversationId)
+        .orderBy('createdAt', descending: false)
+        .snapshots()
+        .map(
+          (snapshot) => snapshot.docs
+              .map((doc) => ChatModel.fromFirestore(doc))
+              .toList(),
+        );
   }
 
   @override
@@ -45,30 +35,33 @@ class ChatRepositoryImpl extends ChatRepository {
     required String receiverId,
     required String text,
   }) async {
-    final box = Hive.box('authBox');
-    final idToken = box.get('idToken');
+    final senderId = _auth.currentUser?.uid ?? '';
+    final now = Timestamp.now();
 
-    final baseUrl = dotenv.env['SEND_MESSAGE_URL'];
+    // Write the message to Firestore — this triggers the real-time stream
+    // on all clients listening to this conversation automatically.
+    await _messagesRef(conversationId).add({
+      'senderId': senderId,
+      'receiverId': receiverId,
+      'text': text,
+      'conversationId': conversationId,
+      'status': 'sent',
+      'isCall': false,
+      'callType': '',
+      'callStatus': '',
+      'unreadCount': 0,
+      'createdAt': now,
+      'updatedAt': now,
+    });
 
-    if (baseUrl == null) {
-      throw Exception("SEND_MESSAGE_URL not set in .env file");
-    }
-
-    final response = await http.post(
-      Uri.parse(baseUrl),
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer $idToken',
-      },
-      body: jsonEncode({
-        'conversationId': conversationId,
-        'receiverId': receiverId,
-        'text': text,
-      }),
-    );
-
-    if (response.statusCode != 200 && response.statusCode != 201) {
-      throw Exception('Failed to send message: ${response.statusCode}');
-    }
+    // Keep the conversation summary up-to-date for the chat list.
+    await _firestore
+        .collection('conversations')
+        .doc(conversationId)
+        .set({
+      'lastMessage': text,
+      'lastMessageTime': now,
+      'participants': [senderId, receiverId],
+    }, SetOptions(merge: true));
   }
 }

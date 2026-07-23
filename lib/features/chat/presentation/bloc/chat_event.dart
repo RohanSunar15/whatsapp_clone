@@ -9,6 +9,13 @@ class LoadChatMessage extends ChatEvent {
   LoadChatMessage({required this.conversationId});
 }
 
+class MarkMessageSeen extends ChatEvent {
+  final String conversationId;
+  final String messageId;
+
+  MarkMessageSeen({required this.conversationId, required this.messageId});
+}
+
 class BackButtonClicked extends ChatEvent {}
 
 class VideoCallButtonClicked extends ChatEvent {}

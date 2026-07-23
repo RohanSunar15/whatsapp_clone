@@ -1,6 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hive_flutter/adapters.dart';
 import 'package:whatsapp_clone/core/theme/app_color.dart';
 import 'package:whatsapp_clone/core/widgets/common/date_formatter.dart';
 import 'package:whatsapp_clone/features/chat/domain/entities/chat_entity.dart';
@@ -28,7 +28,11 @@ class ChatScreen extends StatefulWidget {
 class _ChatMessageScreenState extends State<ChatScreen> {
   final TextEditingController messageController = TextEditingController();
   bool showSend = false;
-  List<ChatEntity?> _messages = [];
+  List<ChatEntity> _messages = [];
+
+  // Firebase UID is the reliable sender identifier when using Firestore.
+  String get _currentUserId =>
+      FirebaseAuth.instance.currentUser?.uid ?? '';
 
   @override
   void initState() {
@@ -57,6 +61,20 @@ class _ChatMessageScreenState extends State<ChatScreen> {
     messageController.clear();
   }
 
+  /// Mark incoming messages as seen when the chat is open.
+  void _markIncomingAsSeen(List<ChatEntity> messages) {
+    for (final msg in messages) {
+      if (msg.senderId != _currentUserId && msg.status == 'sent') {
+        context.read<ChatBloc>().add(
+          MarkMessageSeen(
+            conversationId: widget.conversationId,
+            messageId: msg.id,
+          ),
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<ChatBloc, ChatState>(
@@ -66,6 +84,7 @@ class _ChatMessageScreenState extends State<ChatScreen> {
         }
         if (state is ChatMessageLoaded) {
           setState(() => _messages = state.chatMessage);
+          _markIncomingAsSeen(state.chatMessage);
         }
       },
       buildWhen: (previous, current) =>
@@ -85,9 +104,6 @@ class _ChatMessageScreenState extends State<ChatScreen> {
           );
         }
 
-        final box = Hive.box('authBox');
-        final userId = box.get('mongoId');
-
         return Scaffold(
           backgroundColor: AppColor.cream,
           appBar: AppBar(
@@ -106,38 +122,30 @@ class _ChatMessageScreenState extends State<ChatScreen> {
               ],
             ),
           ),
-          body: Column(
-            children: [
-              Expanded(
-                child: _messages.isEmpty
-                    ? const Center(
-                        child: Text(
-                          'No messages yet. Say hello! 👋',
-                          style: TextStyle(color: Colors.grey),
-                        ),
-                      )
-                    : ListView.builder(
-                        reverse: true,
-                        padding: const EdgeInsets.all(12),
-                        itemCount: _messages.length,
-                        itemBuilder: (context, index) {
-                          final msg =
-                              _messages[_messages.length - 1 - index];
-                          if (msg == null) return const SizedBox();
-                          final isMe = msg.senderId == userId;
-                          final isSeen = msg.status == 'seen';
+          body: _messages.isEmpty
+              ? const Center(
+                  child: Text(
+                    'No messages yet. Say hello! 👋',
+                    style: TextStyle(color: Colors.grey),
+                  ),
+                )
+              : ListView.builder(
+                  reverse: true,
+                  padding: const EdgeInsets.all(12),
+                  itemCount: _messages.length,
+                  itemBuilder: (context, index) {
+                    final msg = _messages[_messages.length - 1 - index];
+                    final isMe = msg.senderId == _currentUserId;
+                    final isSeen = msg.status == 'seen';
 
-                          return MessageBubble(
-                            message: msg.text,
-                            time: DateFormatter.formatToTime(msg.createdAt),
-                            isMe: isMe,
-                            isSeen: isSeen,
-                          );
-                        },
-                      ),
-              ),
-            ],
-          ),
+                    return MessageBubble(
+                      message: msg.text,
+                      time: DateFormatter.formatToTime(msg.createdAt),
+                      isMe: isMe,
+                      isSeen: isSeen,
+                    );
+                  },
+                ),
           bottomNavigationBar: Padding(
             padding: const EdgeInsets.all(15.0),
             child: Row(
@@ -157,11 +165,9 @@ class _ChatMessageScreenState extends State<ChatScreen> {
                         Expanded(
                           child: TextField(
                             controller: messageController,
-                            onChanged: (text) {
-                              context
-                                  .read<ChatBloc>()
-                                  .add(MessageTextChanged(text));
-                            },
+                            onChanged: (text) => context
+                                .read<ChatBloc>()
+                                .add(MessageTextChanged(text)),
                             onSubmitted: (_) => _sendMessage(),
                             minLines: 1,
                             maxLines: 6,
@@ -169,7 +175,7 @@ class _ChatMessageScreenState extends State<ChatScreen> {
                             cursorColor: AppColor.lightGreen,
                             decoration: const InputDecoration(
                               contentPadding: EdgeInsets.all(10),
-                              hintText: "Message",
+                              hintText: 'Message',
                               border: InputBorder.none,
                             ),
                           ),
