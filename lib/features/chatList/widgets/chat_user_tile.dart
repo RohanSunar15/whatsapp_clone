@@ -63,8 +63,8 @@ class ChatUserTileWidget extends StatelessWidget {
             ),
           if (chat.isCall == false) SizedBox(width: 4),
           Icon(
-            chat.status == 'sent' ? Icons.done_all : Icons.done,
-            color: AppColor.blue,
+            chat.status == 'seen' ? Icons.done_all : Icons.done,
+            color: chat.status == 'seen' ? AppColor.blue : Colors.grey,
             size: 16,
           ),
           SizedBox(width: 4),
