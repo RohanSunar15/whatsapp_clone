@@ -1,8 +1,10 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:hive_flutter/adapters.dart';
+import 'package:whatsapp_clone/core/services/notification_service.dart';
 import 'package:whatsapp_clone/core/theme/app_theme.dart';
 import 'package:whatsapp_clone/features/auth/data/repositories/auth_repository_impl.dart';
 import 'package:whatsapp_clone/features/auth/presentation/bloc/auth_bloc.dart';
@@ -20,6 +22,12 @@ void main() async {
   await Hive.openBox('authBox');
   await Firebase.initializeApp();
 
+  // Register the background message handler before any other FCM calls.
+  FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
+
+  // Initialize FCM: request permission, save token, wire up handlers.
+  await NotificationService.initialize();
+
   runApp(
     MultiBlocProvider(
       providers: [
@@ -36,7 +44,6 @@ void main() async {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widgets is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -44,6 +51,9 @@ class MyApp extends StatelessWidget {
       theme: lightTheme,
       darkTheme: darkTheme,
       debugShowCheckedModeBanner: false,
+      // The global navigator key lets NotificationService push routes
+      // without needing a BuildContext.
+      navigatorKey: NotificationService.navigatorKey,
       home: const SplashScreen(),
     );
   }
